@@ -1,0 +1,357 @@
+//
+//  RegisterRequest.m
+//  FrenchTV
+//
+//  Created by mac on 15/2/9.
+//  Copyright (c) 2015年 G.D. All rights reserved.
+//
+
+#import "AccountRequest.h"
+#import "AFHTTPRequestOperationManager.h"
+#import "AFURLSessionManager.h"
+
+#define CRL_API @"http://192.168.1.106:8888/cri"
+
+
+
+@implementation AccountRequest
+
++(AFHTTPRequestOperationManager *)sharedManager
+{
+    static AFHTTPRequestOperationManager* _om = nil;
+    static dispatch_once_t onceToken;
+    
+    dispatch_once(&onceToken, ^{
+        _om =[[AFHTTPRequestOperationManager alloc]initWithBaseURL:[NSURL URLWithString:CRL_API]];
+    });
+    
+    return _om;
+}
+
+
++(void)RegisterRequestWithUserName:(NSString *)username PassWord:(NSString *)password succ:(void (^)(NSDictionary *))succ
+{
+    NSDictionary * param = @{@"username":username,@"password":password};
+    [[AccountRequest sharedManager] POST:@"phoneregister.jspx" parameters:param success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        
+        succ(responseObject);
+        
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        
+    }];
+    
+}
+
++(void)LoginRequestWithUserName:(NSString *)username PassWord:(NSString *)password succ:(void (^)(NSDictionary * data))succ
+{
+    NSDictionary * param = @{@"username":username,@"password":password};
+    [[AccountRequest sharedManager] POST:@"phonelogin.jspx" parameters:param success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        succ(responseObject);
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+}
+
++(void)getHostListRequestWithSucc:(void (^)(NSArray * data))succ
+{
+    [[AccountRequest sharedManager] POST:@"phoneHostList.jspx" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         succ(responseObject[@"data"][@"hostList"]);
+     } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+     {
+         
+     }];
+}
+
++(void)getUserInfo:(void(^)(NSDictionary * UserInfo))succ WithUserVoip:(NSString *)voip
+{
+    NSDictionary * param = @{@"voipAccount":voip};
+    [[AccountRequest sharedManager] POST:@"phoneUserByVoipAccount.jspx" parameters:param success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        succ(responseObject[@"data"]);
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        
+    }];
+}
+
+
++(void)getTopicList:(void(^)(NSDictionary * dataDic))succ
+{
+    [[AccountRequest sharedManager] POST:@"phoneFeature.jspx" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if((int)responseObject[@"status"] == 1)
+        {
+            ECNoTitleAlert(responseObject[@"message"]);
+            
+        }else
+        {
+            succ(responseObject[@"data"]);
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        
+    }];
+}
+
++(void)getMainList:(int)pageNo withSucc:(void (^)(NSDictionary *))succ
+{
+    [[AccountRequest sharedManager] POST:@"phoneCRIAccount.jspx" parameters:@{@"pageNo":[NSNumber numberWithInt:pageNo]} success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        succ(responseObject[@"data"]);
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        
+    }];
+}
+//
+
++(void)getAudioInfo:(void (^)(NSDictionary *))succ
+{
+    [[AccountRequest sharedManager] POST:@"phoneLive.jspx" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        succ(responseObject[@"data"]);
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        
+    }];
+}
++(void)getHostNews:(void(^)(NSDictionary * HostNews))succ WithHostId:(int)ID
+{
+    NSDictionary * param = @{@"hostId":[NSNumber numberWithInt:ID]};
+    [[AccountRequest sharedManager] POST:@"phoneHostContent.jspx" parameters:param success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    
+        succ(responseObject[@"data"]);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+}
+
++(void)AccountChangeName:(void(^)(NSDictionary * dic))succ withNewName:(NSString *)newName
+{
+    NSDictionary * param = @{@"realname":newName};
+    [[AccountRequest sharedManager] POST:@"phoneChangeRealname.jspx" parameters:param success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        succ(responseObject[@"data"]);
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+}
+
++(void)getActivityComment:(void(^)(NSDictionary * dic))succ withContentId:(int)contentId withPage:(int)pageNo
+{
+    NSDictionary * param = @{@"contentId":[NSNumber numberWithInt:contentId],
+                             @"pageNo":[NSNumber numberWithInt:pageNo]};
+    
+    [[AccountRequest sharedManager] POST:@"phoneGetComment.jspx" parameters:param success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        succ(responseObject[@"data"]);
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+}
+
++(void)addComment:(void(^)(NSDictionary * dic))succ withContentId:(int)contentId withText:(NSString *)text
+{
+    NSDictionary * param = @{@"contentId":[NSNumber numberWithInt:contentId],
+                             @"text":text};
+    
+    [[AccountRequest sharedManager] POST:@"phoneSubmitComment.jspx" parameters:param success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        succ(responseObject[@"data"]);
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+    
+}
+
++(void)accountFeedBackWithText:(NSString *)text withMail:(NSString *)mail withPhoneNum:(NSString *)numStr withSucc:(void (^)(NSDictionary *))succ
+{
+    
+    NSDictionary * param = @{@"content":text,
+                             @"email":mail,
+                             @"phone":numStr};
+    
+    [[AccountRequest sharedManager] POST:@"phoneFeedback.jspx" parameters:param success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        succ(responseObject[@"data"]);
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        
+    }];
+}
+
++(void)accountChangeHeaderWithUserId:(int)userId withImgName:(NSString *)imgName withImage:(UIImage *)userIcon withSucc:(void (^)(NSDictionary *))succ
+{
+//    NSData * data = UIImagePNGRepresentation(userIcon);
+    NSDictionary * param = @{@"userId":[NSNumber numberWithInt:userId],
+                             @"imgName":imgName};
+    
+    AFHTTPRequestOperationManager * manager = [AccountRequest sharedManager];
+
+//    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+//    manager.requestSerializer = [AFHTTPRequestSerializer serializer];
+//    manager.responseSerializer.acceptableContentTypes =[NSSet setWithObject:@"application/json"];
+    
+    [manager POST:@"phoneUploadImage.jspx" parameters:param constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        [formData appendPartWithFileData:UIImagePNGRepresentation(userIcon) name:[NSString stringWithFormat: @"file"] fileName:@"upload.png" mimeType:@"image/png"];
+    } success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+    succ(responseObject[@"data"]);
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+}
+
++(void)LessonSendWord:(NSString *)word withSucc:(void (^)(NSDictionary *))succ
+{
+    NSDictionary * param = @{@"word":word};
+    
+    [[AccountRequest sharedManager] POST:@"phoneClassMessage.jspx" parameters:param success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        succ(responseObject[@"data"]);
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+    
+}
+
++(void)getChineseClass:(void (^)(NSDictionary *))succ
+{
+    [[AccountRequest sharedManager] POST:@"phoneClassContent.jspx" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        succ(responseObject[@"data"]);
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        
+    }];
+}
+
++(void)getIntroduce:(void (^)(NSDictionary *))succ
+{
+    [[AccountRequest sharedManager] POST:@"phoneIntroducation.jspx" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        succ(responseObject[@"data"]);
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        
+    }];
+}
+
++(void)getFavoriteWithPage:(int)page withSucc:(void (^)(NSDictionary *))succ{
+    
+    NSDictionary * param = @{@"pageNo":[NSNumber numberWithInt:page]};
+    
+    [[AccountRequest sharedManager] POST:@"phoneUserCollections.jspx" parameters:param success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        succ(responseObject[@"data"]);
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+}
+
++(void)addFavoriteWithId:(int)contentId withSucc:(void (^)(NSDictionary *))succ
+{
+    NSDictionary * param = @{@"contentId":[NSNumber numberWithInt:contentId]};
+    
+    [[AccountRequest sharedManager] POST:@"phoneAddCollections.jspx" parameters:param success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        succ(responseObject);
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+}
+
++(void)deleteFavoriteWithId:(int)contentId withSucc:(void (^)(NSDictionary *))succ
+{
+    NSDictionary * param = @{@"contentId":[NSNumber numberWithInt:contentId]};
+    
+    [[AccountRequest sharedManager] POST:@"phoneDeleteCollections.jspx" parameters:param success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        succ(responseObject[@"data"]);
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+}
+
++(void)accountSearchWithWord:(NSString * )word withSucc:(void (^)(NSDictionary *))succ
+{
+    NSDictionary * param = @{@"keyword":word};
+    
+    [[AccountRequest sharedManager] POST:@"phoneSearch.jspx" parameters:param success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        succ(responseObject[@"data"]);
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+}
+
++(void)commitHostVote:(void (^)(NSDictionary *))succ WithTopicId:(int)topID WithitemID:(int)itemId WithHostId:(int)hostId
+{
+    NSDictionary * param = @{@"topicId":[NSNumber numberWithInt:topID],@"itemId":[NSNumber numberWithInt:itemId],@"hostId":[NSNumber numberWithInt:hostId]};
+    
+    [[AccountRequest sharedManager] POST:@"phoneSubmitVote.jspx" parameters:param success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        succ(responseObject);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+}
+
++(void)hostSendVoice:(NSData *)Voicedata withSucc:(void (^)(NSDictionary *))succ 
+{
+    
+    [[AccountRequest sharedManager] POST:@"phoneHostSendVoice.jspx" parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        [formData appendPartWithFileData:Voicedata name:@"file" fileName:@"hostVoice.arm" mimeType:@"audio/arm"];
+        
+    } success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        succ(responseObject);
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+}
+
++(BOOL)downLoadFileWithUrl:(NSString *)url withSucc:(void (^)(ECMediaMessageBody *))succ
+{
+    NSURLSessionConfiguration * config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    AFURLSessionManager * manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:config];
+    NSString * urlString = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSURL * fileUrl = [NSURL URLWithString:urlString];
+    
+    NSURLRequest * request = [NSURLRequest requestWithURL:fileUrl];
+    
+    NSURLSessionDownloadTask * task = [manager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+        
+        
+        NSString *file = response.suggestedFilename;
+        NSString * path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:file];
+        NSFileManager * fileManager = [[NSFileManager alloc] init];
+        if([fileManager fileExistsAtPath:path])
+        {
+            return nil;
+        }
+        ECMediaMessageBody * mediaBody = [[ECMediaMessageBody alloc] initWithFile:path displayName:file];
+        succ(mediaBody);
+        
+        NSURL *fileURL = [NSURL fileURLWithPath:path];
+        
+        return fileURL;
+        
+    } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+        
+    }];
+    
+    [task resume];
+    return YES;
+    
+}
+
+
+@end
+

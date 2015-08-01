@@ -1,0 +1,1681 @@
+    /*
+ *  Copyright (c) 2013 The CCP project authors. All Rights Reserved.
+ *
+ *  Use of this source code is governed by a Beijing Speedtong Information Technology Co.,Ltd license
+ *  that can be found in the LICENSE file in the root of the web site.
+ *
+ *                    http://www.yuntongxun.com
+ *
+ *  An additional intellectual property rights grant can be found
+ *  in the file PATENTS.  All contributing project authors may
+ *  be found in the AUTHORS file in the root of the source tree.
+ */
+
+#import "IMMsgDBAccess.h"
+#import <UIKit/UIDevice.h>
+#import "ECSession.h"
+#import "ECTextMessageBody.h"
+#import "ECMediaMessageBody.h"
+#import "ECChunkMessageBody.h"
+//#import <objc/runtime.h>
+@interface IMMsgDBAccess()
+
+@end
+
+@implementation IMMsgDBAccess
+- (IMMsgDBAccess *)init
+{
+    if (self=[super init]) {
+        shareDB = [DBConnection getSharedDatabase];
+        [self IMMessageTableCreate];
+        [self IMGroupNoticeTableCreate];
+        [self sessionTableCreate];
+        return self;
+        
+    }
+    return nil;
+}
+
+
+/*
+ 会话表
+ 字段	类型	约束	备注
+ ID	int	自增	主键
+ sessionId 	Varchar	32	会话id
+ dateTime 	Long		显示的时间 毫秒
+ type 	int		与消息表msgType一样
+ text 	Varchar	2048	显示的内容
+ unreadCount	int		未读消息数
+ sumCount 	int		总消息数
+ */
+
+- (BOOL)sessionTableCreate {
+    const char * createTable = "create table if not exists session (ID integer primary key, sessionId varchar(32),dateTime integer,type integer,text varchar(2048),unreadCount integer,sumCount integer)";
+    char * errmsg;
+    int flag = sqlite3_exec(shareDB, createTable, NULL, NULL, &errmsg);
+    if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= 5.0)
+    {
+        free(errmsg);
+    }
+    if (SQLITE_OK!=flag) {
+        NSLog(@"ERROR: Failed to create table Thread or device_info!");
+    }
+    
+    if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= 5.0)
+    {
+        free(errmsg);
+    }
+    
+    if (SQLITE_OK==flag) {
+        return YES;
+    }
+    else return NO;
+}
+
+/*
+ 消息
+ ID 	int	自增	主键
+ SID	Varchar 	32	会话ID
+ msgid	Varchar 	64	消息id 1594129051-ea37ff0-1413864586
+ sender	Varchar 	32	发送者
+ receiver	Varchar 	32	接收者
+ createdTime	Long		入库本地时间 毫秒
+ userData	Varchar	256	用户自定义数据
+ isRead	bool		是否已读
+ msgType	int		消息类型 0:文本 1:多媒体 2:chunk消息 (0-99聊天的消息类型 100-199系统的推送消息类型)
+ text	Varchar	2048	文本
+ localPath	text		本地路径
+ URL	text		下载路径
+ state	int		发送状态 -1发送失败 0发送成功 1发送中 2接收成功（默认为0 接收的消息）
+ serverTime	Long		服务器时间 毫秒
+ remark	Varchar	1024	备注
+ */
+- (BOOL)IMMessageTableCreate {
+    const char * createTable = "create table if not exists im_message(ID integer primary key, SID varchar(32),msgid varchar(64),sender varchar(32), receiver varchar(32),createdTime integer,userData varchar(256), isRead bool,msgType integer, text varchar(2048), localPath text, URL text, state integer, serverTime integer,remark varchar(1024))";
+    char * errmsg;
+    int flag = sqlite3_exec(shareDB, createTable, NULL, NULL, &errmsg);
+    if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= 5.0)
+    {
+        free(errmsg);
+    }
+    if (SQLITE_OK!=flag) {
+        NSLog(@"ERROR: Failed to create table Thread or im_message!");
+    }
+    
+    if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= 5.0)
+    {
+        free(errmsg);
+    }
+    
+    if (SQLITE_OK==flag) {
+        return YES;
+    }
+    else return NO;
+}
+
+/*
+ 群组推送消息表
+ 字段	类型	约束	备注
+ ID	int		自增
+ groupId 	Varchar	32	群组id
+ type 	int		消息类型
+ admin 	Varchar	32	管理员
+ member 	Varchar	32	成员
+ declared 	Varchar	256	原因
+ dateCreated 	Long		服务器的时间 毫秒
+ confirm 	int		是否需要确认
+ isRead	bool		是否已读
+ */
+- (BOOL)IMGroupNoticeTableCreate {
+    const char * createTable = "create table if not exists im_groupnotice(ID integer primary key,groupId varchar(32),type integer,admin varchar(32),member varchar(32),declared varchar(32), dateCreated integer, confirm integer, isRead bool)";
+    char * errmsg;
+    int flag = sqlite3_exec(shareDB, createTable, NULL, NULL, &errmsg);
+    
+    if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= 5.0)
+    {
+        free(errmsg);
+    }
+    if (SQLITE_OK!=flag) {
+        NSLog(@"ERROR: Failed to create table Thread or im_groupnotice!");
+    }
+    
+    if (SQLITE_OK==flag) {
+        return YES;
+    }
+    else return NO;
+}
+
+- (BOOL)runSql:(NSString*)sql
+{
+    @try {
+        char * errmsg;
+        int flag = 0;
+        BOOL returnFlag = YES;
+        const char * cSql = [sql UTF8String];
+        flag = sqlite3_exec(shareDB, cSql, NULL, NULL, &errmsg);
+        if (SQLITE_OK!=flag) {
+            sqlite3_free(errmsg);
+            NSLog(@"ERROR: Failed to %@",sql);
+            returnFlag = FALSE;
+        }
+        
+        return returnFlag;
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Exception name=%@",exception.name);
+        NSLog(@"Exception reason=%@",exception.reason);
+    }
+    @finally {
+    }
+    return NO;
+}
+
+- (NSMutableArray *)loadAllSessions
+{
+    @try
+    {
+        const char * getMsgSql =  [[NSString stringWithFormat:@"select sessionId , dateTime , type , text , unreadCount, sumCount from im_message order by dateTime desc"] UTF8String];
+        static Statement * stmt = nil;
+        if (nil==stmt) {
+            stmt = [DBConnection statementWithQuery:getMsgSql];
+        }
+        NSMutableArray * sessionArray = [[NSMutableArray alloc] init];
+        while (SQLITE_ROW==[stmt step])
+        {
+            ECSession* session = [[ECSession alloc] init];
+            int columnIndex = 0;
+            session.sessionId = [stmt getString:columnIndex]; columnIndex++;
+            session.dateTime = [stmt getInt64:columnIndex]; columnIndex++;
+            session.type = [stmt getInt32:columnIndex]; columnIndex++;
+            session.text = [stmt getString:columnIndex]; columnIndex++;
+            session.unreadCount = [stmt getInt32:columnIndex]; columnIndex++;
+            session.sumCount = [stmt getInt32:columnIndex]; columnIndex++;
+        }
+        [stmt reset]; 
+        return [sessionArray autorelease];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Exception name=%@",exception.name);
+        NSLog(@"Exception reason=%@",exception.reason);
+    }
+    @finally {
+    }
+    return nil;
+}
+
+-(NSString*)getDateTime:(long long) data
+{
+    return [NSString stringWithFormat:@"%lld",data];
+}
+
+-(BOOL)getGroupFlag:(NSString *)msgid
+{
+    if ([[msgid substringToIndex:1] isEqualToString:@"g"])
+    {
+        return YES;
+    }
+    else
+        return NO;
+}
+
+//搜索文本聊天记录
+-(NSArray*)searchTextLike:(NSString*)text
+{
+    @try
+    {
+        const char * getMsgSql =  [[NSString stringWithFormat:@"select msgid,sender,receiver, createdTime , userData ,sessionId, text from im_message where msgType == 1  and text like \"%%%@\%%\" order by createdTime desc",text] UTF8String];
+        static Statement * stmt = nil;
+        if (nil==stmt) {
+            stmt = [DBConnection statementWithQuery:getMsgSql];
+        }
+        NSMutableArray * msgArray = [[NSMutableArray alloc] init];
+        while (SQLITE_ROW==[stmt step])
+        {
+            ECMessage* msg = [[ECMessage alloc] init];
+            int columnIndex = 0;
+            msg.messageId = [stmt getString:columnIndex]; columnIndex++;
+            msg.from = [stmt getString:columnIndex]; columnIndex++;
+            msg.to = [stmt getString:columnIndex]; columnIndex++;
+            msg.timestamp = [self getDateTime:[stmt getInt64:columnIndex]]; columnIndex++;
+            msg.userData = [stmt getString:columnIndex]; columnIndex++;
+            msg.sessionId = [stmt getString:columnIndex]; columnIndex++;
+            msg.isGroup = [self getGroupFlag:msg.messageId];
+            ECTextMessageBody* messageBody = [[ECTextMessageBody alloc] initWithText:[stmt getString:columnIndex]];columnIndex++;
+            msg.messageBody = messageBody;
+            [messageBody release];
+            [msgArray addObject:msg];
+            [msg release];
+        }
+        [stmt reset];
+        return [msgArray autorelease];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Exception name=%@",exception.name);
+        NSLog(@"Exception reason=%@",exception.reason);
+    }
+    @finally {
+    }
+    return nil;
+}
+
+-(long long)getDateInt:(NSString*) date
+{
+    return 0;
+}
+
+-(int)setStmt:(Statement *) stmt andMediaMsgBody:(ECMessageBody*) msgBody andIndex:(int) index
+{
+    if ([msgBody isKindOfClass:[ECTextMessageBody class]])
+    {
+        [stmt bindInt32:MessageBodyType_Text forIndex:index]; index++;
+        ECTextMessageBody * msg = (ECTextMessageBody*) msgBody;
+        [stmt bindString:msg.text forIndex:index]; index++;
+    }
+    else if ([msgBody isKindOfClass:[ECMediaMessageBody class]])
+    {
+        [stmt bindInt32:MessageBodyType_Media forIndex:index]; index++;
+        ECMediaMessageBody * msg = (ECMediaMessageBody*) msgBody;
+        [stmt bindString:@"" forIndex:index]; index++;
+        [stmt bindString:msg.localPath forIndex:index]; index++;
+        [stmt bindString:msg.remotePath forIndex:index]; index++;
+        [stmt bindString:msg.serverTime forIndex:index]; index++;
+    }
+    else if ([msgBody isKindOfClass:[ECChunkMessageBody class]])
+    {
+        [stmt bindInt32:MessageBodyType_ChunkVoice forIndex:index]; index++;
+        [stmt bindString:@"" forIndex:index]; index++;
+        ECChunkMessageBody * msg = (ECChunkMessageBody*) msgBody;
+        [stmt bindString:msg.localPath forIndex:index]; index++;
+        [stmt bindString:msg.remotePath forIndex:index]; index++;
+        [stmt bindString:msg.serverTime forIndex:index]; index++;
+    }
+    return index;
+}
+
+//增加单条消息
+-(BOOL)addMessage:(ECMessage*)message
+{
+    @try
+    {
+        const char * add = "insert into im_message(SID,msgid,sender, receiver,createdTime,userData, isRead,msgType, text, localPath, URL, serverTime,state) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        static Statement * stmt = nil;
+        stmt = nil;
+        if (stmt == nil) {
+            stmt = [DBConnection statementWithQuery:add];
+            [stmt retain];
+        }
+        int index = 1;
+        [stmt bindString:message.sessionId forIndex:index]; index++;
+        [stmt bindString:message.messageId forIndex:index]; index++;
+        [stmt bindString:message.from forIndex:index]; index++;
+        [stmt bindString:message.to forIndex:index]; index++;
+        [stmt bindInt64:[self getDateInt:message.timestamp] forIndex:index]; index++;
+        [stmt bindString:message.userData forIndex:index]; index++;
+        [stmt bindInt32:message.isRead forIndex:index]; index++;
+        index = [self setStmt:stmt andMediaMsgBody:message.messageBody andIndex:index];
+        [stmt bindInt32:message.isRead forIndex:index]; index++;
+        [stmt bindInt32:message.state forIndex:index]; index++;
+        
+        int ret = [stmt step];
+        if (SQLITE_DONE!=ret) {
+            NSLog(@"ERROR: Failed to add new message into im_message!ret=%d,%s",ret,__func__);
+            [stmt reset];
+            return NO;
+        }
+        [stmt reset];
+        return YES;
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Exception name=%@",exception.name);
+        NSLog(@"Exception reason=%@",exception.reason);
+    }
+    @finally {
+    }
+    return NO;
+    return YES;
+}
+
+//增加多条消息
+-(NSInteger)addMessages:(NSArray*)messages
+{
+    int i = 0;
+    for (ECMessage *msg in messages)
+    {
+        if([self addMessage:msg])
+            i++;
+    }
+    return i;
+}
+
+//删除单条消息
+-(BOOL)deleteMessage:(NSString*)msgId
+{
+    return [self runSql:[NSString stringWithFormat: @"delete from im_message where msgid = %@",msgId]];
+}
+
+//删除多条消息
+-(NSInteger)deleteMessages:(NSArray*)messages
+{
+    int count = 0;
+    if ([messages count]<=0)
+    {
+        return count;
+    }
+    for (NSString* msgid in messages)
+    {
+        if ([self deleteMessage: msgid])
+        {
+            count++;
+        }
+    }
+    return count;
+}
+
+//删除某个会话的所有消息
+-(NSInteger)deleteMessageOfSession:(NSString*)sessionId
+{
+      return [self runSql:[NSString stringWithFormat:@"delete from im_message where sessionId = %@",sessionId]];
+}
+
+- (BOOL)deleteWithTable:(NSString*)table
+{
+    return [self runSql:[NSString stringWithFormat:@"delete from %@",table]];
+}
+
+- (BOOL)deleteAllMessage
+{
+    return [self deleteWithTable:@"im_message"];
+}
+
+- (BOOL)deleteAllSession
+{
+    return [self deleteWithTable:@"session"];
+}
+
+- (BOOL)deleteAllGroupNotice
+{
+    return [self deleteWithTable:@"im_groupnotice"];
+}
+
+//清除表数据
+-(NSInteger)clearMessageTable
+{
+    [self deleteAllMessage];
+    [self deleteAllSession];
+    [self deleteAllGroupNotice];
+    return 0;
+}
+
+
+ 
+- (BOOL)deleteGroupNotice:(int)msgid
+{
+    return [self runSql:[NSString stringWithFormat:@"delete from im_groupnotice id = %d",msgid]];
+}
+
+//获取表中所有未读消息数
+-(NSInteger)getUnreadMessageCount
+{
+   
+}
+
+//获取某个会话的未读消息数
+-(NSInteger)getUnreadMessageCountOfSession:(NSString*)sessionId
+{
+    NSInteger count = 0;
+    @try
+    {
+        NSString* strSessionId = @"";
+        if (sessionId)
+        {
+            strSessionId = @"and sessionId = ? ";
+        }
+        const char * sqlString = [[NSString stringWithFormat:@"select count(*) from im_message where isRead = ? %@ and (localPath is not null or msgType = 1) ",strSessionId] UTF8String];
+        static Statement * stmt = nil;
+        stmt = nil;
+        if (nil == stmt)
+        {
+            stmt = [DBConnection statementWithQuery:sqlString];
+            [stmt retain];
+        }
+        [stmt bindInt32:EReadState_Unread forIndex:1];
+        [stmt bindString:sessionId forIndex:2];
+        if (SQLITE_ROW == [stmt step])
+        {
+            count = [stmt getInt32:0];
+        }
+        [stmt reset];
+    }
+    @catch (NSException *exception)
+    {
+        NSLog(@"Exception name=%@",exception.name);
+        NSLog(@"Exception reason=%@",exception.reason);
+    }
+    @finally
+    {
+        return count;
+    }
+}
+
+//获取表中消息数
+-(NSInteger)getMessageCount
+{
+}
+
+//获取某个会话的消息数
+-(NSInteger)getMessageCountOfSession:(NSString*)sessionId
+{
+
+}
+
+//获取会话的某个时间点之前的count条消息
+-(NSArray*)getSomeMessagesCount:(NSInteger)count OfSession:(NSString*)sessionId beforeTime:(long long)timesamp
+{
+
+}
+
+//获取会话的某个时间点之后的count条消息
+-(NSArray*)getSomeMessagesCount:(NSInteger)count OfSession:(NSString*)sessionId afterTime:(long long)timesamp
+{
+
+}
+
+//获取某会话最新的消息
+-(ECMessage*)getLatestMessageOfSession:(NSString*)sessionId
+{
+
+}
+
+//设置会话的所有消息已读
+-(NSInteger)markMessagesAsReadOfSession:(NSString*)sessionId
+{
+
+}
+
+//设置某条消息的阅读状态
+-(BOOL)markMessage:(NSString*)msgId asRead:(BOOL)isRead
+{
+
+}
+
+//更新某消息的状态
+-(BOOL)updateState:(ECState)state ofMessageId:(NSString*)msgId
+{
+
+}
+
+#pragma mark 群组消息操作API
+//增加一条消息
+-(BOOL)addGroupMessage:(ECGroupMessage*)message
+{
+
+}
+
+//增加多条消息
+-(NSInteger)addGroupMessages:(NSArray*)messages
+{
+
+}
+
+//删除关于某群组的所有消息
+-(NSInteger)deleteGroupMessagesOfGroup:(NSString*)groupId
+{
+
+}
+
+//清空表
+-(NSInteger)clearGroupMessageTable
+{
+
+}
+
+//获取未读的消息数
+-(NSArray*)getUnreadGroupMessages
+{
+
+}
+
+//获取表中所有未读消息数
+-(NSInteger)getUnreadGroupMessageCount
+{
+
+}
+
+//获取确定群组的未读消息数
+-(NSInteger)getUnreadGroupMessageCountOfGroup:(NSString*)groupId
+{
+
+}
+
+//获取表中消息数
+-(NSInteger)getAllGroupMessageCount
+{
+
+}
+
+//获取表中确定群组消息数
+-(NSInteger)getAllGroupMessageCountOfGroup:(NSString*)groupId
+{
+
+}
+
+//获取群组中某个时间点之前的count条数据
+-(NSArray*)getSomeGroupMessagesCount:(NSInteger)count OfGroup:(NSString*)group beforeTime:(long long)timesamp
+{
+
+}
+
+//标记某群组中所有消息已读
+-(NSInteger)markGroupMessagesAsReadOfGroup:(NSString*)groupId
+{
+
+}
+
+//标记表中所有消息已读
+-(NSInteger)markGroupMessagesAsRead
+{
+    
+}
+
+
+- (NSArray *)getIMListArray
+{
+    @try {
+        [DBConnection beginTransaction];
+        const char * getMsgSql =  [[NSString stringWithFormat:@"SELECT msgId, sessionId, curDate, msgType, msgContent, max(curDate) ,woId,alias,msgContent from im_message where (filePath is not null or msgType = 0 or  msgType = 3 or  msgType = 4) group  by sessionId order by curDate desc"] UTF8String];
+        
+        static Statement * stmt = nil;
+        stmt = nil;
+        if (nil==stmt) {
+            stmt = [DBConnection statementWithQuery:getMsgSql];
+            [stmt retain];
+        }
+        NSMutableArray * IMArray = [[NSMutableArray alloc] init];
+        while (SQLITE_ROW==[stmt step])
+        {
+            
+        }
+        [stmt reset];
+        
+        [DBConnection commitTransaction];
+        
+        
+        IMConversation* groupMsg = [self getGroupListArrayLimitOne];
+        if (!groupMsg)
+        {
+            groupMsg = [[IMConversation alloc] init];
+        }
+        if ([groupMsg.content length]<=0)
+        {
+            groupMsg.content = @"暂无系统通知消息";
+            groupMsg.type = EConverType_Notice;
+        }
+        [IMArray insertObject: groupMsg atIndex:0];
+        return [IMArray autorelease];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Exception name=%@",exception.name);
+        NSLog(@"Exception reason=%@",exception.reason);
+    }
+    @finally {
+    }
+    return nil;
+}
+
+- (id)getGroupListArrayLimitOne
+{
+    @try {
+        [DBConnection beginTransaction];
+        id msg = [[IMConversation alloc] init];
+        const char * getLastNotice = getLastNotice = [[NSString stringWithFormat:@"select id, curDate, msgType,alias from im_groupnotice order by curDate desc limit 1"] UTF8String];
+        static Statement * stmt2 = nil;
+        stmt2 = nil;
+        if (nil == stmt2)
+        {
+            stmt2 = [DBConnection statementWithQuery:getLastNotice];
+            [stmt2 retain];
+        }
+        while (SQLITE_ROW == [stmt2 step]) {
+           
+            
+        }
+        [stmt2 reset];
+
+        [DBConnection commitTransaction];
+        return [msg autorelease];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Exception name=%@",exception.name);
+        NSLog(@"Exception reason=%@",exception.reason);
+    }
+    @finally {
+    }
+    return nil;
+}
+
+
+- (NSArray*)getAllFilePath{
+    @try
+    {
+        const char * sqlString = sqlString = [[NSString stringWithFormat:@"select filePath from im_message where filePath is not null "] UTF8String];
+        static Statement * stmt = nil;
+        stmt = nil;
+        if (nil == stmt)
+        {
+            stmt = [DBConnection statementWithQuery:sqlString];
+            [stmt retain];
+        }
+        NSMutableArray * fileArray = [[NSMutableArray alloc] init];
+        while (SQLITE_ROW==[stmt step])
+        {
+            [fileArray addObject:[stmt getString:0]];
+        }
+        
+        [stmt reset];
+        return [fileArray autorelease];
+    }
+    @catch (NSException *exception)
+    {
+        NSLog(@"Exception name=%@",exception.name);
+        NSLog(@"Exception reason=%@",exception.reason);
+    }
+    @finally
+    {
+    }
+    return nil;
+}
+
+- (NSArray*)getAllFilePathOfSessionId:(NSString*)sessionId{
+    @try
+    {
+        const char * sqlString = sqlString = [[NSString stringWithFormat:@"select filePath from im_message where sessionId = ? and filePath is not null "] UTF8String];
+        static Statement * stmt = nil;
+        stmt = nil;
+        if (nil == stmt)
+        {
+            stmt = [DBConnection statementWithQuery:sqlString];
+            [stmt retain];
+        }
+        [stmt bindString:sessionId forIndex:1];
+        NSMutableArray * fileArray = [[NSMutableArray alloc] init];
+        while (SQLITE_ROW==[stmt step])
+        {
+            [fileArray addObject:[stmt getString:0]];
+        }
+        
+        [stmt reset];
+        return [fileArray autorelease];
+    }
+    @catch (NSException *exception)
+    {
+        NSLog(@"Exception name=%@",exception.name);
+        NSLog(@"Exception reason=%@",exception.reason);
+    }
+    @finally
+    {
+    }
+    return nil;
+}
+
+//获取会话内容
+- (NSArray *)getMessageOfSessionId:(NSString *)sessionId
+{
+    @try
+    {
+        const char* sqlString = sqlString = [[NSString stringWithFormat:@"select msgid,sessionId,msgType,sender,isRead,imState,createDate,curDate,userData,msgContent,fileUrl,filePath,fileExt,duration,woId,alias from im_message where sessionId = ? and (filePath is not null or msgType = 0 or msgType = 3 or msgType = 4) order by curDate"] UTF8String];
+        static Statement * stmt = nil;
+        stmt = nil;
+        if (nil == stmt)
+        {
+            stmt = [DBConnection statementWithQuery:sqlString];
+            [stmt retain];
+        }
+        [stmt bindString:sessionId forIndex:1];
+        NSMutableArray * IMArray = [[NSMutableArray alloc] init];
+        while (SQLITE_ROW==[stmt step])
+        {
+            IMMessageObj *msg = [[IMMessageObj alloc] init];
+            
+            int columnIndex = 0;
+            msg.msgid = [stmt getString:columnIndex]; columnIndex++;
+            msg.sessionId = [stmt getString:columnIndex]; columnIndex++;
+            msg.msgtype = [stmt getInt32:columnIndex]; columnIndex++;
+            msg.sender = [stmt getString:columnIndex]; columnIndex++;
+            msg.isRead = [stmt getInt32:columnIndex]; columnIndex++;
+            msg.imState = [stmt getInt32:columnIndex]; columnIndex++;
+            msg.dateCreated = [stmt getString:columnIndex]; columnIndex++;
+            msg.curDate = [stmt getString:columnIndex]; columnIndex++;
+            msg.userData = [stmt getString:columnIndex]; columnIndex++;
+            msg.content = [stmt getString:columnIndex]; columnIndex++;
+            msg.fileUrl = [stmt getString:columnIndex]; columnIndex++;
+            msg.filePath = [stmt getString:columnIndex]; columnIndex++;
+            msg.fileExt = [stmt getString:columnIndex]; columnIndex++;
+            msg.duration = [stmt getDouble:columnIndex];columnIndex++;
+            msg.woId = [stmt getString:columnIndex];columnIndex++;
+            msg.alias = [stmt getString:columnIndex];
+            [IMArray addObject:msg];
+            [msg release];
+        }
+        
+        [stmt reset];
+        return [IMArray autorelease];        
+    }
+    @catch (NSException *exception)
+    {
+        NSLog(@"Exception name=%@",exception.name);
+        NSLog(@"Exception reason=%@",exception.reason);
+    }
+    @finally
+    {
+    }
+    return nil;
+}
+
+//获取会话内容
+- (NSArray *)getMessageOfFilePathisNull
+{
+    @try
+    {
+        const char * sqlString = sqlString = [[NSString stringWithFormat:@"select msgid,sessionId,msgType,sender,isRead,imState,createDate,curDate,userData,msgContent,fileUrl,filePath,fileExt,duration,isChunk,woId,alias from im_message where filePath is null and (msgType = 1 or msgType = 2) order by curDate"] UTF8String];
+        static Statement * stmt = nil;
+        stmt = nil;
+        if (nil == stmt)
+        {
+            stmt = [DBConnection statementWithQuery:sqlString];
+            [stmt retain];
+        }
+        NSMutableArray * IMArray = [[NSMutableArray alloc] init];
+        while (SQLITE_ROW==[stmt step])
+        {
+            IMMessageObj *msg = [[IMMessageObj alloc] init];
+            
+            int columnIndex = 0;
+            msg.msgid = [stmt getString:columnIndex]; columnIndex++;
+            msg.sessionId = [stmt getString:columnIndex]; columnIndex++;
+            msg.msgtype = [stmt getInt32:columnIndex]; columnIndex++;
+            msg.sender = [stmt getString:columnIndex]; columnIndex++;
+            msg.isRead = [stmt getInt32:columnIndex]; columnIndex++;
+            msg.imState = [stmt getInt32:columnIndex]; columnIndex++;
+            msg.dateCreated = [stmt getString:columnIndex]; columnIndex++;
+            msg.curDate = [stmt getString:columnIndex]; columnIndex++;
+            msg.userData = [stmt getString:columnIndex]; columnIndex++;
+            msg.content = [stmt getString:columnIndex]; columnIndex++;
+            msg.fileUrl = [stmt getString:columnIndex]; columnIndex++;
+            msg.filePath = [stmt getString:columnIndex]; columnIndex++;
+            msg.fileExt = [stmt getString:columnIndex]; columnIndex++;
+            msg.duration = [stmt getDouble:columnIndex]; columnIndex++;
+            msg.isChunk = [stmt getInt32:columnIndex];columnIndex++;
+            msg.woId = [stmt getString:columnIndex];columnIndex++;
+            msg.alias = [stmt getString:columnIndex];
+
+            [IMArray addObject:msg];
+            [msg release];
+        }
+        
+        [stmt reset];
+        return [IMArray autorelease];
+    }
+    @catch (NSException *exception)
+    {
+        NSLog(@"Exception name=%@",exception.name);
+        NSLog(@"Exception reason=%@",exception.reason);
+    }
+    @finally
+    {
+    }
+    return nil;
+}
+
+- (BOOL)isMessageExistOfMsgid:(NSString*)msgid
+{
+    BOOL isExist = NO;
+    @try
+    {
+        const char * sqlString = [[NSString stringWithFormat:@"select count(*) from im_message where msgid = ? "] UTF8String];
+        static Statement * stmt = nil;
+        stmt = nil;
+        if (nil == stmt)
+        {
+            stmt = [DBConnection statementWithQuery:sqlString];
+            [stmt retain];
+        }
+        [stmt bindString:msgid forIndex:1];
+        if (SQLITE_ROW == [stmt step])
+        {
+            NSInteger count = [stmt getInt32:0];
+            if (count > 0)
+            {
+                isExist = YES;
+            }
+        }
+        [stmt reset];
+    }
+    @catch (NSException *exception)
+    {
+        NSLog(@"Exception name=%@",exception.name);
+        NSLog(@"Exception reason=%@",exception.reason);
+    }
+    @finally
+    {
+        return isExist;
+    }
+}
+
+
+
+- (int)getGroupNoticesWithNotice:(IMGroupNotice *)notice
+{
+    int  messageId = -1;
+    @try {
+        const char * sqlString = sqlString = [[NSString stringWithFormat:@"select id,verifyMsg,msgType,state,isRead,groupId,who,curDate,woId,alias from im_groupnotice where verifyMsg = ? and msgType = ? and state = ? and groupId = ? and who = ? and alias =? order by curDate limit 1"] UTF8String];
+        static Statement * stmt = nil;
+        stmt = nil;
+        if (nil == stmt)
+        {
+            stmt = [DBConnection statementWithQuery:sqlString];
+            [stmt retain];
+        }
+        [stmt bindString:notice.verifyMsg forIndex:1];
+        [stmt bindInt32:notice.msgType forIndex:2];
+        [stmt bindInt32:notice.state forIndex:3];
+        [stmt bindString:notice.groupId forIndex:4];
+        [stmt bindString:notice.who forIndex:5];
+        [stmt bindString:notice.alias forIndex:6];
+
+        while (SQLITE_ROW==[stmt step])
+        {
+            messageId = [stmt getInt32:0];
+        }
+        [stmt reset];
+        return messageId;
+    }
+    @catch (NSException *exception)
+    {
+        NSLog(@"Exception name=%@",exception.name);
+        NSLog(@"Exception reason=%@",exception.reason);
+    }
+    @finally
+    {
+    }
+    return -1;
+}
+
+
+- (BOOL)insertNoticeMessage:(IMGroupNotice *)notice
+{
+    if ([self getGroupNoticesWithNotice:notice] >= 0)
+    {
+        return YES;
+    }
+    
+    @try {
+        const char * add = "insert into im_groupnotice(verifyMsg,msgType,state,isRead,groupId,who,curDate,woId,alias) values (?,?,?,?,?,?,?,?,?)";
+        static Statement * stmt = nil;
+        stmt = nil;
+        if (stmt == nil) {
+            stmt = [DBConnection statementWithQuery:add];
+            [stmt retain];
+        }
+        int index = 1;
+        [stmt bindString:notice.verifyMsg forIndex:index]; index++;
+        [stmt bindInt32:notice.msgType forIndex:index]; index++;
+        [stmt bindInt32:notice.state forIndex:index]; index++;
+        [stmt bindInt32:notice.isRead forIndex:index]; index++;
+        [stmt bindString:notice.groupId forIndex:index]; index++;
+        [stmt bindString:notice.who forIndex:index]; index++;
+        [stmt bindString:notice.curDate forIndex:index];index++;
+        [stmt bindString:notice.woId forIndex:index];index++;
+        [stmt bindString:notice.alias forIndex:index];
+        int ret = [stmt step];
+        if (SQLITE_DONE!=ret) {
+            NSLog(@"ERROR: Failed to add new message into im_message!ret=%d,%s",ret,__func__);
+            [stmt reset];
+            return NO;
+        }
+        [stmt reset];
+        return YES;
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Exception name=%@",exception.name);
+        NSLog(@"Exception reason=%@",exception.reason);
+    }
+    @finally {
+    }
+    return NO;
+
+}
+
+- (NSArray *)getAllGroupNotices
+{
+    @try {
+        const char * sqlString = sqlString = [[NSString stringWithFormat:@"select id,verifyMsg,msgType,state,isRead,groupId,who,curDate,woId,alias from im_groupnotice order by curDate"] UTF8String];
+        static Statement * stmt = nil;
+        stmt = nil;
+        if (nil == stmt)
+        {
+            stmt = [DBConnection statementWithQuery:sqlString];
+            [stmt retain];
+        }
+        NSMutableArray * noticesArray = [[NSMutableArray alloc] init];
+        while (SQLITE_ROW==[stmt step])
+        {
+            IMGroupNotice *notice = [[IMGroupNotice alloc] init];
+            
+            int columnIndex = 0;
+            notice.messageId = [stmt getInt32:columnIndex]; columnIndex++;
+            notice.verifyMsg = [stmt getString:columnIndex]; columnIndex++;
+            notice.msgType = [stmt getInt32:columnIndex]; columnIndex++;
+            notice.state = [stmt getInt32:columnIndex]; columnIndex++;
+            notice.isRead = [stmt getInt32:columnIndex]; columnIndex++;
+            notice.groupId = [stmt getString:columnIndex]; columnIndex++;
+            notice.who = [stmt getString:columnIndex]; columnIndex++;
+            notice.curDate = [stmt getString:columnIndex];columnIndex++;
+            notice.woId = [stmt getString:columnIndex];columnIndex++;
+            notice.alias = [stmt getString:columnIndex];
+            [noticesArray addObject:notice];
+            [notice release];
+        }
+        
+        [stmt reset];
+        return [noticesArray autorelease];
+    }
+    @catch (NSException *exception)
+    {
+        NSLog(@"Exception name=%@",exception.name);
+        NSLog(@"Exception reason=%@",exception.reason);
+    }
+    @finally
+    {
+    }
+    return nil;
+}
+
+-(void)setInstanceMsgWith:(id)msg andIMGroupNotice:(IMGroupNotice*)notice
+{
+    
+
+}
+- (BOOL)insertNoticeMessage:(id)msg withType:(EGroupNoticeType)type
+{
+    return NO;
+}
+
+- (void)insertOrUpdateGroupInfos:(NSArray*)groupInfos{
+    @try
+    {
+        [DBConnection beginTransaction];
+        for (IMGroupInfo *info in groupInfos)
+        {
+            if ([self isGroupExistOfGroupId:info.groupId])
+            {
+                [self updateGroupInfo:info];
+            }
+            else
+            {
+                [self insertGroupInfo:info];
+            }
+        }
+        [DBConnection commitTransaction];
+    }
+    @catch (NSException *exception)
+    {
+        NSLog(@"Exception name=%@", exception.name);
+        NSLog(@"Exception reason=%@", exception.reason);
+    }
+    @finally
+    {
+    }
+}
+
+
+
+
+
+- (BOOL)insertGroupInfo:(IMGroupInfo *)groupInfo
+{
+    @try {
+        const char * add = "insert into im_groupinfo(groupId,name,owner,type,declared,createDate,count,permission) values (?,?,?,?,?,?,?,?)";
+        static Statement * stmt = nil;
+        stmt = nil;
+        if (stmt == nil) {
+            stmt = [DBConnection statementWithQuery:add];
+            [stmt retain];
+        }
+        
+        int index = 1;
+        [stmt bindString:groupInfo.groupId forIndex:index]; index++;
+        [stmt bindString:groupInfo.name forIndex:index]; index++;
+        [stmt bindString:groupInfo.owner forIndex:index]; index++;
+        [stmt bindInt32:groupInfo.type forIndex:index]; index++;
+        [stmt bindString:groupInfo.declared forIndex:index]; index++;
+        [stmt bindString:groupInfo.created forIndex:index]; index++;
+        [stmt bindInt32:groupInfo.count forIndex:index]; index++;
+        [stmt bindInt32:groupInfo.permission forIndex:index];
+        int ret = [stmt step];
+        if (SQLITE_DONE!=ret) {
+            NSLog(@"ERROR: Failed to add new message into im_message!ret=%d,%s",ret,__func__);
+            [stmt reset];
+            return NO;
+        }
+        [stmt reset];
+        return YES;
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Exception name=%@",exception.name);
+        NSLog(@"Exception reason=%@",exception.reason);
+    }
+    @finally {
+    }
+    return NO;
+}
+
+- (void)insertGroupInfos:(NSArray*)groupInfoArr
+{
+    @try
+    {
+        [DBConnection beginTransaction];
+        for (IMGroupInfo *info in groupInfoArr)
+        {
+            [self insertGroupInfo:info];
+        }
+        [DBConnection commitTransaction];
+    }
+    @catch (NSException *exception)
+    {
+        NSLog(@"Exception name=%@",exception.name);
+        NSLog(@"Exception reason=%@",exception.reason);
+    }
+    @finally
+    {
+    }
+}
+
+- (BOOL)isGroupExistOfGroupId:(NSString*)groupId{
+    BOOL isExist = NO;
+    @try
+    {
+        const char * sqlString = [[NSString stringWithFormat:@"select count(*) from im_groupinfo where groupId = ? "] UTF8String];
+        static Statement * stmt = nil;
+        stmt = nil;
+        if (nil == stmt)
+        {
+            stmt = [DBConnection statementWithQuery:sqlString];
+            [stmt retain];
+        }
+        [stmt bindString:groupId forIndex:1];
+        if (SQLITE_ROW == [stmt step])
+        {
+            NSInteger count = [stmt getInt32:0];
+            if (count > 0)
+            {
+                isExist = YES;
+            }
+        }
+        [stmt reset];
+    }
+    @catch (NSException *exception)
+    {
+        NSLog(@"Exception name=%@",exception.name);
+        NSLog(@"Exception reason=%@",exception.reason);
+    }
+    @finally
+    {
+        return isExist;
+    }
+}
+
+- (BOOL)updateGroupInfo:(IMGroupInfo*)groupinfo
+{
+    @try {
+        const char* updateInfo =   updateInfo = [[NSString stringWithFormat:@"update im_groupinfo set name=?,owner=?,type=?,declared=?,createDate=?,count=?,permission=? where groupId=? "] UTF8String];
+        static Statement * stmt = nil;
+        stmt = nil;
+        if (nil==stmt) {
+            stmt = [DBConnection statementWithQuery:updateInfo];
+            [stmt retain];
+        }
+        int index = 1;
+        [stmt bindString:groupinfo.name forIndex:index]; index++;
+        [stmt bindString:groupinfo.owner forIndex:index]; index++;
+        [stmt bindInt32:groupinfo.type forIndex:index]; index++;
+        [stmt bindString:groupinfo.declared forIndex:index]; index++;
+        [stmt bindString:groupinfo.created forIndex:index]; index++;
+        [stmt bindInt32:groupinfo.count forIndex:index]; index++;
+        [stmt bindInt32:groupinfo.permission forIndex:index]; index++;
+        [stmt bindString:groupinfo.groupId forIndex:index];
+        int ret = [stmt step];
+        if (SQLITE_DONE!=ret) {
+            NSLog(@"ERROR: Failed to update table im_groupinfo!");
+            [stmt reset];
+            return NO;
+        }
+        [stmt reset];
+        return YES;
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Exception name=%@",exception.name);
+        NSLog(@"Exception reason=%@",exception.reason);
+    }
+    @finally {
+    }
+    return NO;
+}
+
+- (void)updateGroupInfos:(NSArray*)groupInfos{
+    @try
+    {
+        [DBConnection beginTransaction];
+        
+        for (IMGroupInfo *group in groupInfos)
+        {
+            [self updateGroupInfo:group];
+        }
+        
+        [DBConnection commitTransaction];
+    }
+    @catch (NSException *exception)
+    {
+        NSLog(@"Exception name=%@", exception.name);
+        NSLog(@"Exception reason=%@", exception.reason);
+    }
+    @finally
+    {
+    }
+}
+
+- (NSString*)queryNameOfGroupId:(NSString*)groupId
+{
+    NSString *name = nil;
+    @try
+    {
+        const char * sqlStr = sqlStr = [[NSString stringWithFormat:@"select name from im_groupinfo where groupId=? "] UTF8String];
+        static Statement *stmt = nil;
+        stmt = nil;
+        if (nil == stmt)
+        {
+            stmt = [DBConnection statementWithQuery:sqlStr];
+            [stmt retain];
+        }
+        [stmt bindString:groupId forIndex:1];
+        if (SQLITE_ROW == [stmt step])
+        {
+            name = [stmt getString:0];
+        }
+        [stmt reset];
+    }
+    @catch (NSException *exception)
+    {
+        NSLog(@"Exception name=%@", exception.name);
+        NSLog(@"Exception reasong=%@", exception.reason);
+    }
+    @finally
+    {
+        return name;
+    }
+}
+
+
+- (NSString*)queryNameonlyOfGroupId:(NSString*)groupId
+{
+    NSString *name = nil;
+    @try
+    {
+        const char * sqlStr = sqlStr = [[NSString stringWithFormat:@"select name from im_groupinfo where groupId=? "] UTF8String];
+        static Statement *stmt = nil;
+        stmt = nil;
+        if (nil == stmt)
+        {
+            stmt = [DBConnection statementWithQuery:sqlStr];
+            [stmt retain];
+        }
+        [stmt bindString:groupId forIndex:1];
+        if (SQLITE_ROW == [stmt step])
+        {
+            name = [stmt getString:0];
+        }
+        [stmt reset];
+    }
+    @catch (NSException *exception)
+    {
+        NSLog(@"Exception name=%@", exception.name);
+        NSLog(@"Exception reasong=%@", exception.reason);
+    }
+    @finally
+    {
+        return name;
+    }
+}
+
+
+
+- (NSInteger)getUnreadCountOfSessionId:(NSString *)sessionId
+{
+    NSInteger count = 0;
+    @try
+    {
+        const char * sqlString = [[NSString stringWithFormat:@"select count(*) from im_message where isRead = ? and sessionId = ? and (filePath is not null or msgType = 0 or  msgType = 3 or  msgType = 4) "] UTF8String];
+        static Statement * stmt = nil;
+        stmt = nil;
+        if (nil == stmt)
+        {
+            stmt = [DBConnection statementWithQuery:sqlString];
+            [stmt retain];
+        }
+        [stmt bindInt32:EReadState_Unread forIndex:1];
+        [stmt bindString:sessionId forIndex:2];
+        if (SQLITE_ROW == [stmt step])
+        {
+            count = [stmt getInt32:0];
+        }
+        [stmt reset];
+    }
+    @catch (NSException *exception)
+    {
+        NSLog(@"Exception name=%@",exception.name);
+        NSLog(@"Exception reason=%@",exception.reason);
+    }
+    @finally
+    {
+        return count;
+    }
+}
+
+- (BOOL)updateUnreadStateOfSessionId:(NSString *)sessionId
+{
+    @try {
+        const char * updateInfo = [[NSString stringWithFormat:@"update im_message set isRead = ? where sessionId = ? and (filePath is not null or msgType = 0 or  msgType = 3 or  msgType = 4) "] UTF8String];
+        static Statement * stmt = nil;
+        stmt = nil;
+        if (nil==stmt) {
+            stmt = [DBConnection statementWithQuery:updateInfo];
+            [stmt retain];
+        }
+        [stmt bindInt32:EReadState_IsRead forIndex:1];
+        [stmt bindString:sessionId forIndex:2];
+        int ret = [stmt step];
+        if (SQLITE_DONE!=ret) {
+            NSLog(@"ERROR: Failed to update table im_message!");
+            [stmt reset];
+            return NO;
+        }
+        [stmt reset];
+        return YES;
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Exception name=%@",exception.name);
+        NSLog(@"Exception reason=%@",exception.reason);
+    }
+    @finally {
+    }
+    return NO;
+}
+
+- (BOOL)updateFilePath:(NSString*)path andMsgid:(NSString*)msgid andDuration:(double) duration
+{
+    @try
+    {
+        const char * updateInfo = [[NSString stringWithFormat:@"update im_message set filePath = ?,duration = ? where msgid = ? "] UTF8String];
+        static Statement * stmt = nil;
+        stmt = nil;
+        if (nil==stmt) {
+            stmt = [DBConnection statementWithQuery:updateInfo];
+            [stmt retain];
+        }
+        [stmt bindString:path forIndex:1];
+        [stmt bindDouble:duration forIndex:2];
+        [stmt bindString:msgid forIndex:3];
+        int ret = [stmt step];
+        if (SQLITE_DONE!=ret) {
+            NSLog(@"ERROR: Failed to update table im_message!");
+            [stmt reset];
+            return NO;
+        }
+        [stmt reset];
+        return YES;
+    }
+    @catch (NSException *exception)
+    {
+        NSLog(@"Exception name=%@", exception.name);
+        NSLog(@"Exception reason=%@", exception.reason);
+    }
+    @finally 
+    {
+    }
+    return NO;
+}
+
+- (BOOL)updateNewMsgId:(NSString*)newMsgId OfOldMsgId:(NSString *)oldMsgId
+{
+    NSLog(@"updateNewMsgId=%@；OfOldMsgId=%@", newMsgId, oldMsgId);
+    @try {
+        const char * updateInfo = [[NSString stringWithFormat:@"update im_message set msgid = ? where msgid = ? "]UTF8String];
+        static Statement * stmt = nil;
+        stmt = nil;
+        if (nil==stmt) {
+            stmt = [DBConnection statementWithQuery:updateInfo];
+            [stmt retain];
+        }
+        [stmt bindString:newMsgId forIndex:1];
+        [stmt bindString:oldMsgId forIndex:2];
+        int ret = [stmt step];
+        if (SQLITE_DONE!=ret) {
+            NSLog(@"ERROR: Failed to update table im_message!");
+            [stmt reset];
+            return NO;
+        }
+        [stmt reset];
+        return YES;
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Exception name=%@",exception.name);
+        NSLog(@"Exception reason=%@",exception.reason);
+    }
+    @finally {
+    }
+    return NO;
+}
+
+- (BOOL)updateimState:(EMessageState)status OfmsgId:(NSString *)msgId
+{
+    NSLog(@"updateimState msgid=%@", msgId);
+    @try {
+        const char * updateInfo = [[NSString stringWithFormat:@"update im_message set imState = ?  where msgid = ? "] UTF8String];
+        static Statement * stmt = nil;
+        stmt = nil;
+        if (nil==stmt) {
+            stmt = [DBConnection statementWithQuery:updateInfo];
+            [stmt retain];
+        }
+        [stmt bindInt32:status forIndex:1];
+        [stmt bindString:msgId forIndex:2];
+        int ret = [stmt step];
+        if (SQLITE_DONE!=ret) {
+            NSLog(@"ERROR: Failed to update table im_message!");
+            [stmt reset];
+            return NO;
+        }
+        [stmt reset];
+        return YES;
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Exception name=%@",exception.name);
+        NSLog(@"Exception reason=%@",exception.reason);
+    }
+    @finally {
+    }
+    return NO;
+}
+
+-(NSString*)getCallTimesWithEndTime:(NSString*) endtime andMsgId:(NSString*)msgId
+{
+    const char * sqlString = [[NSString stringWithFormat:@"select curDate,imState from im_message where msgid = ?  "] UTF8String];
+    static Statement * stmt = nil;
+        stmt = nil;
+    if (nil == stmt)
+    {
+        stmt = [DBConnection statementWithQuery:sqlString];
+        [stmt retain];
+    }
+    [stmt bindString:msgId forIndex:1];
+    NSString* strCurDate = nil;
+    int imState = 0;
+    NSString *dural = @"未接通";
+    if (SQLITE_ROW == [stmt step])
+    {
+        strCurDate = [stmt getString:0];
+        imState = [stmt getInt32:1];
+    }
+    [stmt reset];
+    
+    if ([strCurDate length]>0 && imState == EMessageState_Send_OtherReceived)
+    {
+        NSDateFormatter* dateFormat = [[NSDateFormatter alloc] init];//实例化一个NSDateFormatter对象
+        [dateFormat setDateFormat:@"yyyyMMddHHmmss"];//设定时间格式,这里可以设置成自己需要的格式
+        NSDate *startDate =[dateFormat dateFromString:strCurDate];
+        NSDate *endDate =[dateFormat dateFromString:endtime];
+        NSTimeInterval aTimer = [endDate timeIntervalSinceDate:startDate];
+        
+        int hour = (int)(aTimer/3600);
+        int minute = (int)(aTimer - hour*3600)/60;
+        int second = aTimer - hour*3600 - minute*60;
+        if (hour >0)
+        {
+            dural = [NSString stringWithFormat:@"通话时长 %02d:%02d:%02d", hour, minute,second];
+        }
+        else
+            dural = [NSString stringWithFormat:@"通话时长 %02d:%02d", minute,second];
+    }
+    
+    return dural;
+}
+
+- (BOOL)updateimState:(EMessageState)status OfmsgId:(NSString *)msgId andEndTime:(NSString*) endtime
+{
+    NSLog(@"updateimState msgid=%@", msgId);
+    @try {
+        const char * updateInfo = [[NSString stringWithFormat:@"update im_message set imState = ? ,endDate = ? ,msgContent = ? where msgid = ? "] UTF8String];
+        static Statement * stmt = nil;
+        stmt = nil;
+        if (nil==stmt) {
+            stmt = [DBConnection statementWithQuery:updateInfo];
+            [stmt retain];
+        }
+        [stmt bindInt32:status forIndex:1];
+        [stmt bindString:endtime forIndex:2];
+        
+        if ([endtime length]>0)
+        {
+            NSString* strContent = [self getCallTimesWithEndTime:endtime andMsgId:msgId];
+            [stmt bindString:strContent forIndex:3];
+        }
+        else
+            [stmt bindString:@"未接通" forIndex:3];
+        
+        [stmt bindString:msgId forIndex:4];
+        int ret = [stmt step];
+        if (SQLITE_DONE!=ret) {
+            NSLog(@"ERROR: Failed to update table im_message!");
+            [stmt reset];
+            return NO;
+        }
+        [stmt reset];
+        return YES;
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Exception name=%@",exception.name);
+        NSLog(@"Exception reason=%@",exception.reason);
+    }
+    @finally {
+    }
+    return NO;
+}
+
+
+
+- (BOOL)updateimState:(EMessageState)status OfmsgId:(NSString *)msgId andStartTime:(NSString*) starttime
+{
+    NSLog(@"updateimState msgid=%@", msgId);
+    @try {
+        const char * updateInfo = [[NSString stringWithFormat:@"update im_message set imState = ? ,curDate = ? ,createdate= ?,msgContent = ? where msgid = ? "] UTF8String];
+        static Statement * stmt = nil;
+        stmt = nil;
+        if (nil==stmt) {
+            stmt = [DBConnection statementWithQuery:updateInfo];
+            [stmt retain];
+        }
+        [stmt bindInt32:status forIndex:1];
+        [stmt bindString:starttime forIndex:2];
+        [stmt bindString:starttime forIndex:3];
+        
+        if ([starttime length]>0)
+        {
+            NSString* strContent = [self getCallTimesWithEndTime:starttime andMsgId:msgId];
+            [stmt bindString:strContent forIndex:4];
+        }
+        else
+            [stmt bindString:@"未接通" forIndex:4];
+        
+        [stmt bindString:msgId forIndex:5];
+        int ret = [stmt step];
+        if (SQLITE_DONE!=ret) {
+            NSLog(@"ERROR: Failed to update table im_message!");
+            [stmt reset];
+            return NO;
+        }
+        [stmt reset];
+        return YES;
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Exception name=%@",exception.name);
+        NSLog(@"Exception reason=%@",exception.reason);
+    }
+    @finally {
+    }
+    return NO;
+}
+
+
+
+
+
+- (BOOL)updateGroupNoticeState:(EGroupNoticeOperation)state OfGroupId:(NSString *)groupid andPushMsgType:(EGroupNoticeType)msgType andWho:(NSString*)who
+{
+    @try {
+        const char * updateInfo = [[NSString stringWithFormat:@"update im_groupnotice set state = ? where groupId=? and msgType=? and who=? "] UTF8String];
+        static Statement * stmt = nil;
+        stmt = nil;
+        if (nil==stmt) {
+            stmt = [DBConnection statementWithQuery:updateInfo];
+            [stmt retain];
+        }
+        [stmt bindInt32:state forIndex:1];
+        [stmt bindString:groupid forIndex:2];
+        [stmt bindInt32:msgType forIndex:3];
+        [stmt bindString:who forIndex:4];
+        int ret = [stmt step];
+        if (SQLITE_DONE!=ret) {
+            NSLog(@"ERROR: Failed to update table im_groupnotice!");
+            [stmt reset];
+            return NO;
+        }
+        [stmt reset];
+        return YES;
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Exception name=%@",exception.name);
+        NSLog(@"Exception reason=%@",exception.reason);
+    }
+    @finally {
+    }
+    return NO;
+}
+
+- (BOOL)updateUnreadGroupNotice
+{
+    @try {
+        const char * updateInfo = [[NSString stringWithFormat:@"update im_groupnotice set isRead=? where isRead=? "] UTF8String];
+        static Statement * stmt = nil;
+        stmt = nil;
+        if (nil==stmt) {
+            stmt = [DBConnection statementWithQuery:updateInfo];
+            [stmt retain];
+        }
+        [stmt bindInt32:EReadState_IsRead forIndex:1];
+        [stmt bindInt32:EReadState_Unread forIndex:2];
+        int ret = [stmt step];
+        if (SQLITE_DONE!=ret) {
+            NSLog(@"ERROR: Failed to update table im_message!");
+            [stmt reset];
+            return NO;
+        }
+        [stmt reset];
+        return YES;
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Exception name=%@",exception.name);
+        NSLog(@"Exception reason=%@",exception.reason);
+    }
+    @finally {
+    }
+    return NO;
+}
+
+- (NSInteger)getUnreadCountOfGroupNotice
+{
+    NSInteger count = 0;
+    @try
+    {
+        const char * sqlString = [[NSString stringWithFormat:@"select count(*) from im_groupnotice where isRead = ? "] UTF8String];
+        static Statement * stmt = nil;
+        stmt = nil;
+        if (nil == stmt)
+        {
+            stmt = [DBConnection statementWithQuery:sqlString];
+            [stmt retain];
+        }
+        [stmt bindInt32:EReadState_Unread forIndex:1];
+        if (SQLITE_ROW == [stmt step])
+        {
+            count = [stmt getInt32:0];
+        }
+        [stmt reset];
+    }
+    @catch (NSException *exception)
+    {
+        NSLog(@"Exception name=%@",exception.name);
+        NSLog(@"Exception reason=%@",exception.reason);
+    }
+    @finally
+    {
+        return count;
+    }
+}
+
+- (BOOL)updateAllSendingToFailed
+{
+    @try {
+        const char * updateInfo = [[NSString stringWithFormat:@"update im_message set imState=? where imState=? "] UTF8String];
+        static Statement * stmt = nil;
+        stmt = nil;
+        if (nil==stmt) {
+            stmt = [DBConnection statementWithQuery:updateInfo];
+            [stmt retain];
+        }
+        [stmt bindInt32:EMessageState_SendFailed forIndex:1];
+        [stmt bindInt32:EMessageState_Sending forIndex:2];
+        int ret = [stmt step];
+        if (SQLITE_DONE!=ret) {
+            NSLog(@"ERROR: Failed to update table im_message!");
+            [stmt reset];
+            return NO;
+        }
+        [stmt reset];
+        return YES;
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Exception name=%@",exception.name);
+        NSLog(@"Exception reason=%@",exception.reason);
+    }
+    @finally {
+    }
+    return NO;
+}
+
+//+ (NSDictionary *)properties_aps:(id)obj
+//{
+//    NSMutableDictionary *props = [NSMutableDictionary dictionary];
+//    unsigned int outCount, i;
+//    objc_property_t *properties = class_copyPropertyList([obj class], &outCount);
+//    for (i = 0; i<outCount; i++)
+//    {
+//        objc_property_t property = properties[i];
+//        const char* char_f =property_getName(property);
+//        NSString *propertyName = [NSString stringWithUTF8String:char_f];
+//        id propertyValue = [obj valueForKey:(NSString *)propertyName];
+//        if (propertyValue) [props setObject:propertyValue forKey:propertyName];
+//    }
+//    free(properties);
+//    return props;
+//}
+
+@end

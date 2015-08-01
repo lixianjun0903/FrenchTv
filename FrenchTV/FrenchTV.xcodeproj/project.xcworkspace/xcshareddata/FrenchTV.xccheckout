@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>DF347CC9-477B-46D5-BBBB-FDBD79CB3A2B</string>
+	<key>IDESourceControlProjectName</key>
+	<string>FrenchTV</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>fc49d9d0-02b7-6d4c-8fb8-875ec993a0b3++8458</key>
+		<string>https://124.42.1.100:9443/svn/project/20150124_%25E5%259B%25BD%25E9%2599%2585%25E5%258F%25B0%25E6%25B3%2595%25E8%25AF%25ADAPP/ios</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>FrenchTV/FrenchTV.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>fc49d9d0-02b7-6d4c-8fb8-875ec993a0b3++8458</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectRepositoryRootDictionary</key>
+	<dict>
+		<key>fc49d9d0-02b7-6d4c-8fb8-875ec993a0b3++8458</key>
+		<string>https://124.42.1.100:9443/svn/project</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://124.42.1.100:9443/svn/project/20150124_%25E5%259B%25BD%25E9%2599%2585%25E5%258F%25B0%25E6%25B3%2595%25E8%25AF%25ADAPP/ios/FrenchTV/FrenchTV.xcodeproj</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>fc49d9d0-02b7-6d4c-8fb8-875ec993a0b3++8458</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.subversion</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>fc49d9d0-02b7-6d4c-8fb8-875ec993a0b3++8458</string>
+			<key>IDESourceControlWCCName</key>
+			<string>FrenchTv</string>
+		</dict>
+	</array>
+</dict>
+</plist>

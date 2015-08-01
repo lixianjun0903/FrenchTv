@@ -1,0 +1,964 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="html/html; charset=utf-8" />
+		<title>ECChatManager Protocol Reference</title>
+		<meta id="xcode-display" name="xcode-display" content="render"/>
+		<link rel="stylesheet" type="text/css" href="../css/styles.css" media="all" />
+		<link rel="stylesheet" type="text/css" media="print" href="../css/stylesPrint.css" />
+		<meta name="generator" content="appledoc 2.2 (build 963)" />
+	</head>
+	<body>
+		<header id="top_header">
+			<div id="library" class="hideInXcode">
+				<h1><a id="libraryTitle" href="../index.html">YTX_iOS_SDK </a></h1>
+				<a id="developerHome" href="../index.html">yuntongxun</a>
+			</div>
+			
+			<div id="title" role="banner">
+				<h1 class="hideInXcode">ECChatManager Protocol Reference</h1>
+			</div>
+			<ul id="headerButtons" role="toolbar">
+				<li id="toc_button">
+					<button aria-label="Show Table of Contents" role="checkbox" class="open" id="table_of_contents"><span class="disclosure"></span>Table of Contents</button>
+				</li>
+				<li id="jumpto_button" role="navigation">
+					<select id="jumpTo">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+	
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<option value="instance_methods">Instance Methods</option>
+	
+	<option value="//api/name/cancelRealTimeMessage:">&nbsp;&nbsp;&nbsp;&nbsp;- cancelRealTimeMessage:</option>
+	
+	<option value="//api/name/downloadChunkMessage:completion:">&nbsp;&nbsp;&nbsp;&nbsp;- downloadChunkMessage:completion:</option>
+	
+	<option value="//api/name/downloadMediaMessage:progress:completion:">&nbsp;&nbsp;&nbsp;&nbsp;- downloadMediaMessage:progress:completion:</option>
+	
+	<option value="//api/name/downloadThumbnailMessage:progress:completion:">&nbsp;&nbsp;&nbsp;&nbsp;- downloadThumbnailMessage:progress:completion:</option>
+	
+	<option value="//api/name/playVoiceMessage:completion:">&nbsp;&nbsp;&nbsp;&nbsp;- playVoiceMessage:completion:</option>
+	
+	<option value="//api/name/sendMessage:progress:completion:">&nbsp;&nbsp;&nbsp;&nbsp;- sendMessage:progress:completion:</option>
+	
+	<option value="//api/name/sendRealTimeMessage:error:">&nbsp;&nbsp;&nbsp;&nbsp;- sendRealTimeMessage:error:</option>
+	
+	<option value="//api/name/startVoiceRecording:error:">&nbsp;&nbsp;&nbsp;&nbsp;- startVoiceRecording:error:</option>
+	
+	<option value="//api/name/stopPlayingVoiceMessage">&nbsp;&nbsp;&nbsp;&nbsp;- stopPlayingVoiceMessage</option>
+	
+	<option value="//api/name/stopRealTimeMessage:">&nbsp;&nbsp;&nbsp;&nbsp;- stopRealTimeMessage:</option>
+	
+	<option value="//api/name/stopVoiceRecording:">&nbsp;&nbsp;&nbsp;&nbsp;- stopVoiceRecording:</option>
+	
+	
+	
+</select>
+				</li>
+			</ul>
+		</header>
+		<nav id="tocContainer" class="isShowingTOC">
+			<ul id="toc" role="tree">
+				
+<li role="treeitem"><span class="nodisclosure"></span><span class="sectionName"><a href="#overview">Overview</a></span></li>
+
+
+
+
+<li role="treeitem" id="task_treeitem"><span class="nodisclosure"></span><span class="sectionName"><a href="#tasks">Tasks</a></span><ul>
+	
+</ul></li>
+
+
+
+
+
+
+
+
+
+<li role="treeitem" class="children"><span class="disclosure"></span><span class="sectionName"><a href="#instance_methods">Instance Methods</a></span><ul>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/cancelRealTimeMessage:">cancelRealTimeMessage:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/downloadChunkMessage:completion:">downloadChunkMessage:completion:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/downloadMediaMessage:progress:completion:">downloadMediaMessage:progress:completion:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/downloadThumbnailMessage:progress:completion:">downloadThumbnailMessage:progress:completion:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/playVoiceMessage:completion:">playVoiceMessage:completion:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/sendMessage:progress:completion:">sendMessage:progress:completion:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/sendRealTimeMessage:error:">sendRealTimeMessage:error:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/startVoiceRecording:error:">startVoiceRecording:error:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/stopPlayingVoiceMessage">stopPlayingVoiceMessage</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/stopRealTimeMessage:">stopRealTimeMessage:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/stopVoiceRecording:">stopVoiceRecording:</a></span></li>
+	
+</ul></li>
+
+
+			</ul>
+		</nav>
+		<article>
+			<div id="contents" class="isShowingTOC" role="main">
+				<a title="ECChatManager Protocol Reference" name="top"></a>
+				<div class="main-navigation navigation-top">
+					<ul>
+	<li><a href="../index.html">Index</a></li>
+	<li><a href="../hierarchy.html">Hierarchy</a></li>
+</ul>
+				</div>
+				<div id="header">
+					<div class="section-header">
+						<h1 class="title title-header">ECChatManager Protocol Reference</h1>
+					</div>		
+				</div>
+				<div id="container">	
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<td class="specification-title">Conforms to</td>
+	<td class="specification-value"><a href="../Protocols/ECManagerBase.html">ECManagerBase</a></td>
+</tr><tr>
+	<td class="specification-title">Declared in</td>
+	<td class="specification-value">ECChatManager.h</td>
+</tr>
+						</tbody></table></div>
+					
+                    
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>聊天管理类
+用于发送消息、录音、播音、下载附件消息等</p>
+					</div>
+					
+					
+					
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						<h2 class="subtitle subtitle-tasks">Tasks</h2>
+						
+						
+						
+						
+
+						<ul class="task-list">
+							<li>
+	<span class="tooltip">
+		<code><a href="#//api/name/sendMessage:progress:completion:">&ndash;&nbsp;sendMessage:progress:completion:</a></code>
+	</span>
+	
+	<span class="task-item-suffix">required method</span>
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/sendRealTimeMessage:error:">&ndash;&nbsp;sendRealTimeMessage:error:</a></code>
+	</span>
+	
+	<span class="task-item-suffix">required method</span>
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/stopRealTimeMessage:">&ndash;&nbsp;stopRealTimeMessage:</a></code>
+	</span>
+	
+	<span class="task-item-suffix">required method</span>
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/cancelRealTimeMessage:">&ndash;&nbsp;cancelRealTimeMessage:</a></code>
+	</span>
+	
+	<span class="task-item-suffix">required method</span>
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/startVoiceRecording:error:">&ndash;&nbsp;startVoiceRecording:error:</a></code>
+	</span>
+	
+	<span class="task-item-suffix">required method</span>
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/stopVoiceRecording:">&ndash;&nbsp;stopVoiceRecording:</a></code>
+	</span>
+	
+	<span class="task-item-suffix">required method</span>
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/playVoiceMessage:completion:">&ndash;&nbsp;playVoiceMessage:completion:</a></code>
+	</span>
+	
+	<span class="task-item-suffix">required method</span>
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/stopPlayingVoiceMessage">&ndash;&nbsp;stopPlayingVoiceMessage</a></code>
+	</span>
+	
+	<span class="task-item-suffix">required method</span>
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/downloadMediaMessage:progress:completion:">&ndash;&nbsp;downloadMediaMessage:progress:completion:</a></code>
+	</span>
+	
+	<span class="task-item-suffix">required method</span>
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/downloadThumbnailMessage:progress:completion:">&ndash;&nbsp;downloadThumbnailMessage:progress:completion:</a></code>
+	</span>
+	
+	<span class="task-item-suffix">required method</span>
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/downloadChunkMessage:completion:">&ndash;&nbsp;downloadChunkMessage:completion:</a></code>
+	</span>
+	
+	<span class="task-item-suffix">required method</span>
+</li>
+						</ul>
+						
+					</div>
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					<div class="section section-methods">
+						<a title="Instance Methods" name="instance_methods"></a>
+						<h2 class="subtitle subtitle-methods">Instance Methods</h2>
+						
+						<div class="section-method">
+	<a name="//api/name/cancelRealTimeMessage:" title="cancelRealTimeMessage:"></a>
+	<h3 class="subsubtitle method-title">cancelRealTimeMessage:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>取消发送实时语音</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (NSString *)cancelRealTimeMessage:(void ( ^ ) ( ECError *error , ECMessage *message ))<em>completion</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completion</em></dt>
+			<dd><p>执行结果回调block</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>函数调用成功返回消息id，失败返回nil</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>调用该函数取消发送，并发送取消标识</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">ECChatManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/downloadChunkMessage:completion:" title="downloadChunkMessage:completion:"></a>
+	<h3 class="subsubtitle method-title">downloadChunkMessage:completion:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>下载实时语音消息</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)downloadChunkMessage:(ECMessage *)<em>message</em> completion:(void ( ^ ) ( ECError *error , ECMessage *message ))<em>completion</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>message</em></dt>
+			<dd><p>下载的实时语音消息</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completion</em></dt>
+			<dd><p>执行结果回调block</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">ECChatManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/downloadMediaMessage:progress:completion:" title="downloadMediaMessage:progress:completion:"></a>
+	<h3 class="subsubtitle method-title">downloadMediaMessage:progress:completion:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>下载附件消息</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)downloadMediaMessage:(ECMessage *)<em>message</em> progress:(id&lt;ECProgressDelegate&gt;)<em>progress</em> completion:(void ( ^ ) ( ECError *error , ECMessage *message ))<em>completion</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>message</em></dt>
+			<dd><p>多媒体类型消息</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>progress</em></dt>
+			<dd><p>下载进度</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completion</em></dt>
+			<dd><p>执行结果回调block</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">ECChatManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/downloadThumbnailMessage:progress:completion:" title="downloadThumbnailMessage:progress:completion:"></a>
+	<h3 class="subsubtitle method-title">downloadThumbnailMessage:progress:completion:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>下载图片文件缩略图</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)downloadThumbnailMessage:(ECMessage *)<em>message</em> progress:(id&lt;ECProgressDelegate&gt;)<em>progress</em> completion:(void ( ^ ) ( ECError *error , ECMessage *message ))<em>completion</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>message</em></dt>
+			<dd><p>多媒体类型消息</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>progress</em></dt>
+			<dd><p>下载进度</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completion</em></dt>
+			<dd><p>执行结果回调block</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">ECChatManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/playVoiceMessage:completion:" title="playVoiceMessage:completion:"></a>
+	<h3 class="subsubtitle method-title">playVoiceMessage:completion:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>播放arm音频消息</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)playVoiceMessage:(ECMediaMessageBody *)<em>msg</em> completion:(void ( ^ ) ( ECError *error ))<em>completion</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completion</em></dt>
+			<dd><p>执行结果回调block</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">ECChatManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/sendMessage:progress:completion:" title="sendMessage:progress:completion:"></a>
+	<h3 class="subsubtitle method-title">sendMessage:progress:completion:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>发送消息</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (NSString *)sendMessage:(ECMessage *)<em>message</em> progress:(id&lt;ECProgressDelegate&gt;)<em>progress</em> completion:(void ( ^ ) ( ECError *error , ECMessage *message ))<em>completion</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>message</em></dt>
+			<dd><p>发送的消息</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>progress</em></dt>
+			<dd><p>发送进度代理</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completion</em></dt>
+			<dd><p>执行结果回调block</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>函数调用成功返回消息id，失败返回nil</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>发送文本消息时，进度不生效；发送附件消息时，进度代理生效</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">ECChatManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/sendRealTimeMessage:error:" title="sendRealTimeMessage:error:"></a>
+	<h3 class="subsubtitle method-title">sendRealTimeMessage:error:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>发送实时语音消息</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (NSString *)sendRealTimeMessage:(ECMessage *)<em>msg</em> error:(void ( ^ ) ( ECError *error , ECMessage *message ))<em>error</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>msg</em></dt>
+			<dd><p>发送的消息</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completion</em></dt>
+			<dd><p>执行结果回调block</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>函数调用成功返回消息id，失败返回nil</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>边录边传模式</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">ECChatManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/startVoiceRecording:error:" title="startVoiceRecording:error:"></a>
+	<h3 class="subsubtitle method-title">startVoiceRecording:error:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>录制arm音频</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)startVoiceRecording:(ECMediaMessageBody *)<em>msg</em> error:(void ( ^ ) ( ECError *error , ECMediaMessageBody *messageBody ))<em>error</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>msg</em></dt>
+			<dd><p>音频的消息体</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completion</em></dt>
+			<dd><p>执行结果回调block</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">ECChatManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/stopPlayingVoiceMessage" title="stopPlayingVoiceMessage"></a>
+	<h3 class="subsubtitle method-title">stopPlayingVoiceMessage</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>停止播放音频</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (BOOL)stopPlayingVoiceMessage</code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completion</em></dt>
+			<dd><p>执行结果回调block</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">ECChatManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/stopRealTimeMessage:" title="stopRealTimeMessage:"></a>
+	<h3 class="subsubtitle method-title">stopRealTimeMessage:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>停止发送实时语音</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (NSString *)stopRealTimeMessage:(void ( ^ ) ( ECError *error , ECMessage *message ))<em>completion</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completion</em></dt>
+			<dd><p>执行结果回调block</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>函数调用成功返回消息id，失败返回nil</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>调用该函数停止录制语音并完成发送</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">ECChatManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/stopVoiceRecording:" title="stopVoiceRecording:"></a>
+	<h3 class="subsubtitle method-title">stopVoiceRecording:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>停止录制arm音频</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)stopVoiceRecording:(void ( ^ ) ( ECError *error , ECMediaMessageBody *messageBody ))<em>completion</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completion</em></dt>
+			<dd><p>执行结果回调block</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">ECChatManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+					</div>
+					
+					
+                    
+                    
+                    
+                    
+
+				</div>
+				<div class="main-navigation navigation-bottom">
+					<ul>
+	<li><a href="../index.html">Index</a></li>
+	<li><a href="../hierarchy.html">Hierarchy</a></li>
+</ul>
+				</div>
+				<div id="footer">
+					<hr />
+					<div class="footer-copyright">
+						<p><span class="copyright">&copy; 2015 yuntongxun. All rights reserved. (Last updated: 2015-01-16)</span><br />
+						
+						<span class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2 (build 963)</a>.</span></p>
+						
+					</div>
+				</div>
+			</div>
+		</article>
+		<script type="text/javascript">
+			function jumpToChange()
+			{
+				window.location.hash = this.options[this.selectedIndex].value;
+			}
+			
+			function toggleTOC()
+			{
+				var contents = document.getElementById('contents');
+				var tocContainer = document.getElementById('tocContainer');
+				
+				if (this.getAttribute('class') == 'open')
+				{
+					this.setAttribute('class', '');
+					contents.setAttribute('class', '');
+					tocContainer.setAttribute('class', '');
+					
+					window.name = "hideTOC";
+				}
+				else
+				{
+					this.setAttribute('class', 'open');
+					contents.setAttribute('class', 'isShowingTOC');
+					tocContainer.setAttribute('class', 'isShowingTOC');
+					
+					window.name = "";
+				}
+				return false;
+			}
+			
+			function toggleTOCEntryChildren(e)
+			{
+				e.stopPropagation();
+				var currentClass = this.getAttribute('class');
+				if (currentClass == 'children') {
+					this.setAttribute('class', 'children open');
+				}
+				else if (currentClass == 'children open') {
+					this.setAttribute('class', 'children');
+				}
+				return false;
+			}
+			
+			function tocEntryClick(e)
+			{
+				e.stopPropagation();
+				return true;
+			}
+			
+			function init()
+			{
+				var selectElement = document.getElementById('jumpTo');
+				selectElement.addEventListener('change', jumpToChange, false);
+				
+				var tocButton = document.getElementById('table_of_contents');
+				tocButton.addEventListener('click', toggleTOC, false);
+				
+				var taskTreeItem = document.getElementById('task_treeitem');
+				if (taskTreeItem.getElementsByTagName('li').length > 0)
+				{
+					taskTreeItem.setAttribute('class', 'children');
+					taskTreeItem.firstChild.setAttribute('class', 'disclosure');
+				}
+				
+				var tocList = document.getElementById('toc');
+				
+				var tocEntries = tocList.getElementsByTagName('li');
+				for (var i = 0; i < tocEntries.length; i++) {
+					tocEntries[i].addEventListener('click', toggleTOCEntryChildren, false);
+				}
+				
+				var tocLinks = tocList.getElementsByTagName('a');
+				for (var i = 0; i < tocLinks.length; i++) {
+					tocLinks[i].addEventListener('click', tocEntryClick, false);
+				}
+				
+				if (window.name == "hideTOC") {
+					toggleTOC.call(tocButton);
+				}
+			}
+			
+			window.onload = init;
+			
+			// If showing in Xcode, hide the TOC and Header
+			if (navigator.userAgent.match(/xcode/i)) {
+				document.getElementById("contents").className = "hideInXcode"
+				document.getElementById("tocContainer").className = "hideInXcode"
+				document.getElementById("top_header").className = "hideInXcode"
+			}
+			
+		</script>
+	</body>
+</html>

@@ -1,0 +1,1412 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="html/html; charset=utf-8" />
+		<title>ECGroupManager Protocol Reference</title>
+		<meta id="xcode-display" name="xcode-display" content="render"/>
+		<link rel="stylesheet" type="text/css" href="../css/styles.css" media="all" />
+		<link rel="stylesheet" type="text/css" media="print" href="../css/stylesPrint.css" />
+		<meta name="generator" content="appledoc 2.2 (build 963)" />
+	</head>
+	<body>
+		<header id="top_header">
+			<div id="library" class="hideInXcode">
+				<h1><a id="libraryTitle" href="../index.html">YTX_iOS_SDK </a></h1>
+				<a id="developerHome" href="../index.html">yuntongxun</a>
+			</div>
+			
+			<div id="title" role="banner">
+				<h1 class="hideInXcode">ECGroupManager Protocol Reference</h1>
+			</div>
+			<ul id="headerButtons" role="toolbar">
+				<li id="toc_button">
+					<button aria-label="Show Table of Contents" role="checkbox" class="open" id="table_of_contents"><span class="disclosure"></span>Table of Contents</button>
+				</li>
+				<li id="jumpto_button" role="navigation">
+					<select id="jumpTo">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+	
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<option value="instance_methods">Instance Methods</option>
+	
+	<option value="//api/name/ackInviteJoinGroupRequest:ackType:completion:">&nbsp;&nbsp;&nbsp;&nbsp;- ackInviteJoinGroupRequest:ackType:completion:</option>
+	
+	<option value="//api/name/ackJoinGroupRequest:member:ackType:completion:">&nbsp;&nbsp;&nbsp;&nbsp;- ackJoinGroupRequest:member:ackType:completion:</option>
+	
+	<option value="//api/name/createGroup:completion:">&nbsp;&nbsp;&nbsp;&nbsp;- createGroup:completion:</option>
+	
+	<option value="//api/name/deleteGroup:completion:">&nbsp;&nbsp;&nbsp;&nbsp;- deleteGroup:completion:</option>
+	
+	<option value="//api/name/deleteGroupMembers:members:completion:">&nbsp;&nbsp;&nbsp;&nbsp;- deleteGroupMembers:members:completion:</option>
+	
+	<option value="//api/name/forbidMemberSpeakStatus:member:speakStatus:completion:">&nbsp;&nbsp;&nbsp;&nbsp;- forbidMemberSpeakStatus:member:speakStatus:completion:</option>
+	
+	<option value="//api/name/getAllPublicGroups:completion:">&nbsp;&nbsp;&nbsp;&nbsp;- getAllPublicGroups:completion:</option>
+	
+	<option value="//api/name/getGroupDetail:completion:">&nbsp;&nbsp;&nbsp;&nbsp;- getGroupDetail:completion:</option>
+	
+	<option value="//api/name/inviteJoinGroup:reason:members:confirm:completion:">&nbsp;&nbsp;&nbsp;&nbsp;- inviteJoinGroup:reason:members:confirm:completion:</option>
+	
+	<option value="//api/name/joinGroup:reason:completion:">&nbsp;&nbsp;&nbsp;&nbsp;- joinGroup:reason:completion:</option>
+	
+	<option value="//api/name/modifyGroup:completion:">&nbsp;&nbsp;&nbsp;&nbsp;- modifyGroup:completion:</option>
+	
+	<option value="//api/name/modifyMemberCard:completion:">&nbsp;&nbsp;&nbsp;&nbsp;- modifyMemberCard:completion:</option>
+	
+	<option value="//api/name/queryGroupMembers:completion:">&nbsp;&nbsp;&nbsp;&nbsp;- queryGroupMembers:completion:</option>
+	
+	<option value="//api/name/queryMemberCard:belong:completion:">&nbsp;&nbsp;&nbsp;&nbsp;- queryMemberCard:belong:completion:</option>
+	
+	<option value="//api/name/queryOwnGroups:">&nbsp;&nbsp;&nbsp;&nbsp;- queryOwnGroups:</option>
+	
+	<option value="//api/name/quitGroup:completion:">&nbsp;&nbsp;&nbsp;&nbsp;- quitGroup:completion:</option>
+	
+	<option value="//api/name/searchPublicGroups:completion:">&nbsp;&nbsp;&nbsp;&nbsp;- searchPublicGroups:completion:</option>
+	
+	<option value="//api/name/setGroupMessageOption:completion:">&nbsp;&nbsp;&nbsp;&nbsp;- setGroupMessageOption:completion:</option>
+	
+	
+	
+</select>
+				</li>
+			</ul>
+		</header>
+		<nav id="tocContainer" class="isShowingTOC">
+			<ul id="toc" role="tree">
+				
+<li role="treeitem"><span class="nodisclosure"></span><span class="sectionName"><a href="#overview">Overview</a></span></li>
+
+
+
+
+<li role="treeitem" id="task_treeitem"><span class="nodisclosure"></span><span class="sectionName"><a href="#tasks">Tasks</a></span><ul>
+	
+</ul></li>
+
+
+
+
+
+
+
+
+
+<li role="treeitem" class="children"><span class="disclosure"></span><span class="sectionName"><a href="#instance_methods">Instance Methods</a></span><ul>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/ackInviteJoinGroupRequest:ackType:completion:">ackInviteJoinGroupRequest:ackType:completion:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/ackJoinGroupRequest:member:ackType:completion:">ackJoinGroupRequest:member:ackType:completion:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/createGroup:completion:">createGroup:completion:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/deleteGroup:completion:">deleteGroup:completion:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/deleteGroupMembers:members:completion:">deleteGroupMembers:members:completion:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/forbidMemberSpeakStatus:member:speakStatus:completion:">forbidMemberSpeakStatus:member:speakStatus:completion:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/getAllPublicGroups:completion:">getAllPublicGroups:completion:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/getGroupDetail:completion:">getGroupDetail:completion:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/inviteJoinGroup:reason:members:confirm:completion:">inviteJoinGroup:reason:members:confirm:completion:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/joinGroup:reason:completion:">joinGroup:reason:completion:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/modifyGroup:completion:">modifyGroup:completion:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/modifyMemberCard:completion:">modifyMemberCard:completion:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/queryGroupMembers:completion:">queryGroupMembers:completion:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/queryMemberCard:belong:completion:">queryMemberCard:belong:completion:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/queryOwnGroups:">queryOwnGroups:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/quitGroup:completion:">quitGroup:completion:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/searchPublicGroups:completion:">searchPublicGroups:completion:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/setGroupMessageOption:completion:">setGroupMessageOption:completion:</a></span></li>
+	
+</ul></li>
+
+
+			</ul>
+		</nav>
+		<article>
+			<div id="contents" class="isShowingTOC" role="main">
+				<a title="ECGroupManager Protocol Reference" name="top"></a>
+				<div class="main-navigation navigation-top">
+					<ul>
+	<li><a href="../index.html">Index</a></li>
+	<li><a href="../hierarchy.html">Hierarchy</a></li>
+</ul>
+				</div>
+				<div id="header">
+					<div class="section-header">
+						<h1 class="title title-header">ECGroupManager Protocol Reference</h1>
+					</div>		
+				</div>
+				<div id="container">	
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<td class="specification-title">Conforms to</td>
+	<td class="specification-value"><a href="../Protocols/ECManagerBase.html">ECManagerBase</a></td>
+</tr><tr>
+	<td class="specification-title">Declared in</td>
+	<td class="specification-value">ECGroupManager.h</td>
+</tr>
+						</tbody></table></div>
+					
+                    
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>群组管理类
+包含有关群组操作函数</p>
+					</div>
+					
+					
+					
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						<h2 class="subtitle subtitle-tasks">Tasks</h2>
+						
+						
+						
+						
+
+						<ul class="task-list">
+							<li>
+	<span class="tooltip">
+		<code><a href="#//api/name/createGroup:completion:">&ndash;&nbsp;createGroup:completion:</a></code>
+	</span>
+	
+	<span class="task-item-suffix">required method</span>
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/modifyGroup:completion:">&ndash;&nbsp;modifyGroup:completion:</a></code>
+	</span>
+	
+	<span class="task-item-suffix">required method</span>
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/deleteGroup:completion:">&ndash;&nbsp;deleteGroup:completion:</a></code>
+	</span>
+	
+	<span class="task-item-suffix">required method</span>
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/getAllPublicGroups:completion:">&ndash;&nbsp;getAllPublicGroups:completion:</a></code>
+	</span>
+	
+	<span class="task-item-suffix">required method</span>
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/searchPublicGroups:completion:">&ndash;&nbsp;searchPublicGroups:completion:</a></code>
+	</span>
+	
+	<span class="task-item-suffix">required method</span>
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/getGroupDetail:completion:">&ndash;&nbsp;getGroupDetail:completion:</a></code>
+	</span>
+	
+	<span class="task-item-suffix">required method</span>
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/joinGroup:reason:completion:">&ndash;&nbsp;joinGroup:reason:completion:</a></code>
+	</span>
+	
+	<span class="task-item-suffix">required method</span>
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/inviteJoinGroup:reason:members:confirm:completion:">&ndash;&nbsp;inviteJoinGroup:reason:members:confirm:completion:</a></code>
+	</span>
+	
+	<span class="task-item-suffix">required method</span>
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/deleteGroupMembers:members:completion:">&ndash;&nbsp;deleteGroupMembers:members:completion:</a></code>
+	</span>
+	
+	<span class="task-item-suffix">required method</span>
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/quitGroup:completion:">&ndash;&nbsp;quitGroup:completion:</a></code>
+	</span>
+	
+	<span class="task-item-suffix">required method</span>
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/modifyMemberCard:completion:">&ndash;&nbsp;modifyMemberCard:completion:</a></code>
+	</span>
+	
+	<span class="task-item-suffix">required method</span>
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/queryMemberCard:belong:completion:">&ndash;&nbsp;queryMemberCard:belong:completion:</a></code>
+	</span>
+	
+	<span class="task-item-suffix">required method</span>
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/queryGroupMembers:completion:">&ndash;&nbsp;queryGroupMembers:completion:</a></code>
+	</span>
+	
+	<span class="task-item-suffix">required method</span>
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/queryOwnGroups:">&ndash;&nbsp;queryOwnGroups:</a></code>
+	</span>
+	
+	<span class="task-item-suffix">required method</span>
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/forbidMemberSpeakStatus:member:speakStatus:completion:">&ndash;&nbsp;forbidMemberSpeakStatus:member:speakStatus:completion:</a></code>
+	</span>
+	
+	<span class="task-item-suffix">required method</span>
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/ackJoinGroupRequest:member:ackType:completion:">&ndash;&nbsp;ackJoinGroupRequest:member:ackType:completion:</a></code>
+	</span>
+	
+	<span class="task-item-suffix">required method</span>
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/ackInviteJoinGroupRequest:ackType:completion:">&ndash;&nbsp;ackInviteJoinGroupRequest:ackType:completion:</a></code>
+	</span>
+	
+	<span class="task-item-suffix">required method</span>
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/setGroupMessageOption:completion:">&ndash;&nbsp;setGroupMessageOption:completion:</a></code>
+	</span>
+	
+	<span class="task-item-suffix">required method</span>
+</li>
+						</ul>
+						
+					</div>
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					<div class="section section-methods">
+						<a title="Instance Methods" name="instance_methods"></a>
+						<h2 class="subtitle subtitle-methods">Instance Methods</h2>
+						
+						<div class="section-method">
+	<a name="//api/name/ackInviteJoinGroupRequest:ackType:completion:" title="ackInviteJoinGroupRequest:ackType:completion:"></a>
+	<h3 class="subsubtitle method-title">ackInviteJoinGroupRequest:ackType:completion:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>用户验证管理员邀请加入群组</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)ackInviteJoinGroupRequest:(NSString *)<em>groupId</em> ackType:(ECAckType)<em>type</em> completion:(void ( ^ ) ( ECError *error , NSString *gorupId ))<em>completion</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>groupId</em></dt>
+			<dd><p>邀请加入的群组id</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>type</em></dt>
+			<dd><p>是否同意</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completion</em></dt>
+			<dd><p>执行结果回调block</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">ECGroupManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/ackJoinGroupRequest:member:ackType:completion:" title="ackJoinGroupRequest:member:ackType:completion:"></a>
+	<h3 class="subsubtitle method-title">ackJoinGroupRequest:member:ackType:completion:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>管理员验证用户申请加入群组</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)ackJoinGroupRequest:(NSString *)<em>groupId</em> member:(NSString *)<em>memberId</em> ackType:(ECAckType)<em>type</em> completion:(void ( ^ ) ( ECError *error , NSString *gorupId , NSString *memberId ))<em>completion</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>groupId</em></dt>
+			<dd><p>申请加入的群组id</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>memberId</em></dt>
+			<dd><p>申请加入的成员id</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>type</em></dt>
+			<dd><p>是否同意</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completion</em></dt>
+			<dd><p>执行结果回调block</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">ECGroupManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/createGroup:completion:" title="createGroup:completion:"></a>
+	<h3 class="subsubtitle method-title">createGroup:completion:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>创建群组</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)createGroup:(ECGroup *)<em>group</em> completion:(void ( ^ ) ( ECError *error , ECGroup *group ))<em>completion</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>group</em></dt>
+			<dd><p>创建的群组信息 只需关注group中name、declared、type、mode</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completion</em></dt>
+			<dd><p>执行结果回调block</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">ECGroupManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/deleteGroup:completion:" title="deleteGroup:completion:"></a>
+	<h3 class="subsubtitle method-title">deleteGroup:completion:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>删除群组</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)deleteGroup:(NSString *)<em>groupId</em> completion:(void ( ^ ) ( ECError *error , NSString *groupId ))<em>completion</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>groupId</em></dt>
+			<dd><p>删除的群组id</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completion</em></dt>
+			<dd><p>执行结果回调block</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">ECGroupManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/deleteGroupMembers:members:completion:" title="deleteGroupMembers:members:completion:"></a>
+	<h3 class="subsubtitle method-title">deleteGroupMembers:members:completion:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>删除成员</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)deleteGroupMembers:(NSString *)<em>groupId</em> members:(NSArray *)<em>members</em> completion:(void ( ^ ) ( ECError *error , NSString *groupId , NSArray *members ))<em>completion</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>groupId</em></dt>
+			<dd><p>删除成员的群组id</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>members</em></dt>
+			<dd><p>删除的成员</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completion</em></dt>
+			<dd><p>执行结果回调block</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">ECGroupManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/forbidMemberSpeakStatus:member:speakStatus:completion:" title="forbidMemberSpeakStatus:member:speakStatus:completion:"></a>
+	<h3 class="subsubtitle method-title">forbidMemberSpeakStatus:member:speakStatus:completion:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>管理员对成员禁言</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)forbidMemberSpeakStatus:(NSString *)<em>groupId</em> member:(NSString *)<em>memberId</em> speakStatus:(ECSpeakStatus)<em>status</em> completion:(void ( ^ ) ( ECError *error , NSString *groupId , NSString *memberId ))<em>completion</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>groupId</em></dt>
+			<dd><p>成员所属群组id</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>memberId</em></dt>
+			<dd><p>成员id</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>status</em></dt>
+			<dd><p>禁言状态</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completion</em></dt>
+			<dd><p>执行结果回调block</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">ECGroupManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/getAllPublicGroups:completion:" title="getAllPublicGroups:completion:"></a>
+	<h3 class="subsubtitle method-title">getAllPublicGroups:completion:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>获取所有公共群组</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)getAllPublicGroups:(NSString *)<em>lastUpdateTime</em> completion:(void ( ^ ) ( ECError *error , NSString *updateTime , NSArray *groups ))<em>completion</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>lastUpdateTime</em></dt>
+			<dd><p>时间点, UTC时间, 以毫秒为单位
+        (NSDate返回的timeInterval是以秒为单位的, 如果使用NSDate, 比如 timeIntervalSince1970 方法，需要将 timeInterval 乘以1000)</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completion</em></dt>
+			<dd><p>执行结果回调block</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">ECGroupManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/getGroupDetail:completion:" title="getGroupDetail:completion:"></a>
+	<h3 class="subsubtitle method-title">getGroupDetail:completion:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>获取群组属性</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)getGroupDetail:(NSString *)<em>groupId</em> completion:(void ( ^ ) ( ECError *error , ECGroup *group ))<em>completion</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>groupId</em></dt>
+			<dd><p>获取信息的群组id</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completion</em></dt>
+			<dd><p>执行结果回调block</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">ECGroupManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/inviteJoinGroup:reason:members:confirm:completion:" title="inviteJoinGroup:reason:members:confirm:completion:"></a>
+	<h3 class="subsubtitle method-title">inviteJoinGroup:reason:members:confirm:completion:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>管理员邀请加入群组</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)inviteJoinGroup:(NSString *)<em>groupId</em> reason:(NSString *)<em>reason</em> members:(NSArray *)<em>members</em> confirm:(NSInteger)<em>confirm</em> completion:(void ( ^ ) ( ECError *error , NSString *groupId , NSArray *members ))<em>completion</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>groupId</em></dt>
+			<dd><p>邀请加入的群组id</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>reason</em></dt>
+			<dd><p>邀请理由</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>members</em></dt>
+			<dd><p>邀请加入的人</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>confirm</em></dt>
+			<dd><p>是否需要对方验证 0:需要对方验证 1:直接加入(不需要验证)</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completion</em></dt>
+			<dd><p>执行结果回调block</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">ECGroupManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/joinGroup:reason:completion:" title="joinGroup:reason:completion:"></a>
+	<h3 class="subsubtitle method-title">joinGroup:reason:completion:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>用户申请加入群组</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)joinGroup:(NSString *)<em>groupId</em> reason:(NSString *)<em>reason</em> completion:(void ( ^ ) ( ECError *error , NSString *groupId ))<em>completion</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>groupId</em></dt>
+			<dd><p>申请加入的群组Id</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>reason</em></dt>
+			<dd><p>申请加入的理由</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completion</em></dt>
+			<dd><p>执行结果回调block</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">ECGroupManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/modifyGroup:completion:" title="modifyGroup:completion:"></a>
+	<h3 class="subsubtitle method-title">modifyGroup:completion:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>修改群组</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)modifyGroup:(ECGroup *)<em>group</em> completion:(void ( ^ ) ( ECError *error , ECGroup *group ))<em>completion</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>group</em></dt>
+			<dd><p>修改的群组信息</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completion</em></dt>
+			<dd><p>执行结果回调block</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">ECGroupManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/modifyMemberCard:completion:" title="modifyMemberCard:completion:"></a>
+	<h3 class="subsubtitle method-title">modifyMemberCard:completion:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>修改群组成员名片</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)modifyMemberCard:(ECGroupMember *)<em>member</em> completion:(void ( ^ ) ( ECError *error , ECGroupMember *member ))<em>completion</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>member</em></dt>
+			<dd><p>修改的成员名片</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completion</em></dt>
+			<dd><p>执行结果回调block</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">ECGroupManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/queryGroupMembers:completion:" title="queryGroupMembers:completion:"></a>
+	<h3 class="subsubtitle method-title">queryGroupMembers:completion:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>查询群组成员</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)queryGroupMembers:(NSString *)<em>groupId</em> completion:(void ( ^ ) ( ECError *error , NSArray *members ))<em>completion</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>groupId</em></dt>
+			<dd><p>查询的群组id</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completion</em></dt>
+			<dd><p>执行结果回调block</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">ECGroupManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/queryMemberCard:belong:completion:" title="queryMemberCard:belong:completion:"></a>
+	<h3 class="subsubtitle method-title">queryMemberCard:belong:completion:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>查询群组成员名片</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)queryMemberCard:(NSString *)<em>memberId</em> belong:(NSString *)<em>groupId</em> completion:(void ( ^ ) ( ECError *error , ECGroupMember *member ))<em>completion</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>memberId</em></dt>
+			<dd><p>查询的成员id</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>groupId</em></dt>
+			<dd><p>成员所属群组id</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completion</em></dt>
+			<dd><p>执行结果回调block</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">ECGroupManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/queryOwnGroups:" title="queryOwnGroups:"></a>
+	<h3 class="subsubtitle method-title">queryOwnGroups:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>查询加入的群组</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)queryOwnGroups:(void ( ^ ) ( ECError *error , NSArray *groups ))<em>completion</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completion</em></dt>
+			<dd><p>执行结果回调block</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">ECGroupManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/quitGroup:completion:" title="quitGroup:completion:"></a>
+	<h3 class="subsubtitle method-title">quitGroup:completion:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>退出群组</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)quitGroup:(NSString *)<em>groupId</em> completion:(void ( ^ ) ( ECError *error , NSString *groupId ))<em>completion</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>groupId</em></dt>
+			<dd><p>退出的群组id</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completion</em></dt>
+			<dd><p>执行结果回调block</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">ECGroupManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/searchPublicGroups:completion:" title="searchPublicGroups:completion:"></a>
+	<h3 class="subsubtitle method-title">searchPublicGroups:completion:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>按条件搜索公共群组</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)searchPublicGroups:(ECGroupMatch *)<em>match</em> completion:(void ( ^ ) ( ECError *error , NSArray *groups ))<em>completion</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>match</em></dt>
+			<dd><p>需要匹配的条件</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completion</em></dt>
+			<dd><p>执行结果回调block</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">ECGroupManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/setGroupMessageOption:completion:" title="setGroupMessageOption:completion:"></a>
+	<h3 class="subsubtitle method-title">setGroupMessageOption:completion:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>成员设置群组消息接收规则</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)setGroupMessageOption:(ECGroupOption *)<em>option</em> completion:(void ( ^ ) ( ECError *error , NSString *groupId ))<em>completion</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>option</em></dt>
+			<dd><p>群组消息接收规则</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>completion</em></dt>
+			<dd><p>执行结果回调block</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">ECGroupManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+					</div>
+					
+					
+                    
+                    
+                    
+                    
+
+				</div>
+				<div class="main-navigation navigation-bottom">
+					<ul>
+	<li><a href="../index.html">Index</a></li>
+	<li><a href="../hierarchy.html">Hierarchy</a></li>
+</ul>
+				</div>
+				<div id="footer">
+					<hr />
+					<div class="footer-copyright">
+						<p><span class="copyright">&copy; 2015 yuntongxun. All rights reserved. (Last updated: 2015-01-16)</span><br />
+						
+						<span class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2 (build 963)</a>.</span></p>
+						
+					</div>
+				</div>
+			</div>
+		</article>
+		<script type="text/javascript">
+			function jumpToChange()
+			{
+				window.location.hash = this.options[this.selectedIndex].value;
+			}
+			
+			function toggleTOC()
+			{
+				var contents = document.getElementById('contents');
+				var tocContainer = document.getElementById('tocContainer');
+				
+				if (this.getAttribute('class') == 'open')
+				{
+					this.setAttribute('class', '');
+					contents.setAttribute('class', '');
+					tocContainer.setAttribute('class', '');
+					
+					window.name = "hideTOC";
+				}
+				else
+				{
+					this.setAttribute('class', 'open');
+					contents.setAttribute('class', 'isShowingTOC');
+					tocContainer.setAttribute('class', 'isShowingTOC');
+					
+					window.name = "";
+				}
+				return false;
+			}
+			
+			function toggleTOCEntryChildren(e)
+			{
+				e.stopPropagation();
+				var currentClass = this.getAttribute('class');
+				if (currentClass == 'children') {
+					this.setAttribute('class', 'children open');
+				}
+				else if (currentClass == 'children open') {
+					this.setAttribute('class', 'children');
+				}
+				return false;
+			}
+			
+			function tocEntryClick(e)
+			{
+				e.stopPropagation();
+				return true;
+			}
+			
+			function init()
+			{
+				var selectElement = document.getElementById('jumpTo');
+				selectElement.addEventListener('change', jumpToChange, false);
+				
+				var tocButton = document.getElementById('table_of_contents');
+				tocButton.addEventListener('click', toggleTOC, false);
+				
+				var taskTreeItem = document.getElementById('task_treeitem');
+				if (taskTreeItem.getElementsByTagName('li').length > 0)
+				{
+					taskTreeItem.setAttribute('class', 'children');
+					taskTreeItem.firstChild.setAttribute('class', 'disclosure');
+				}
+				
+				var tocList = document.getElementById('toc');
+				
+				var tocEntries = tocList.getElementsByTagName('li');
+				for (var i = 0; i < tocEntries.length; i++) {
+					tocEntries[i].addEventListener('click', toggleTOCEntryChildren, false);
+				}
+				
+				var tocLinks = tocList.getElementsByTagName('a');
+				for (var i = 0; i < tocLinks.length; i++) {
+					tocLinks[i].addEventListener('click', tocEntryClick, false);
+				}
+				
+				if (window.name == "hideTOC") {
+					toggleTOC.call(tocButton);
+				}
+			}
+			
+			window.onload = init;
+			
+			// If showing in Xcode, hide the TOC and Header
+			if (navigator.userAgent.match(/xcode/i)) {
+				document.getElementById("contents").className = "hideInXcode"
+				document.getElementById("tocContainer").className = "hideInXcode"
+				document.getElementById("top_header").className = "hideInXcode"
+			}
+			
+		</script>
+	</body>
+</html>
